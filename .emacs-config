@@ -1,0 +1,6 @@
+;; The above was present before i added the custom functions
+(package-initialize)
+
+;; show line numbers by default during start up
+(add-hook 'prog-mode-hook 'linum-mode)
+(setq linum-format "%4d ")
