@@ -4,3 +4,17 @@
 ;; show line numbers by default during start up
 (add-hook 'prog-mode-hook 'linum-mode)
 (setq linum-format "%4d ")
+
+;; make indentation commands use space only (never tab character)
+(setq-default indent-tabs-mode nil)
+
+;; make indentation to 2 spaces for all python files
+(add-hook 'python-mode-hook '(lambda ()
+                               (setq python-indent 2)))
+
+;; turn on highlight matching brackets when cursor is on one
+(show-paren-mode 1)
+
+; highlight brackets
+(setq show-paren-style 'parenthesis) 
+
