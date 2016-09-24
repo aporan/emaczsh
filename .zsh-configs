@@ -5,3 +5,16 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[cyan]%})"
 
 local ret_status="%(?:%{$fg_bold[green]%} ➜ :%{$fg_bold[red]%} ➜  %s)"
 PROMPT='%{$fg_bold[red]%}%m %{$fg_bold[yellow]%}[%{$fg_bold[white]%}%1~%{$fg_bold[yellow]%}]$ret_status %{$reset_color%}$(git_prompt_info)'
+
+## before using this stub do:
+##   "dircolors -p > ~./dircolors"
+##   change 'OTHER_WRITABLE' colors to something different'
+## customize terminal directory colors for 'everybody or other writable'
+if [[ -f ~/.dircolors ]] ; then
+    eval $(dircolors -b ~/.dircolors)
+fi
+
+## customize tab completion colors which follows the LS_COLORS from dircolors used above
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+autoload -Uz compinit
+compinit
