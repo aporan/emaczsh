@@ -1,4 +1,15 @@
-;; The above was present before i added the custom functions
+(custom-set-variables
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(custom-enabled-themes (quote (tango-dark)))
+ '(org-agenda-files nil)
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
+
+(custom-set-faces
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 169 :width normal )))))
+
+;; The above was present before I added the custom functions
 (package-initialize)
 
 ;; show line numbers by default during start up
