@@ -1,0 +1,207 @@
+* Emacs Programming Intro 
+
+Written below is a 'short' and simple introduction to Emacs Lisp Programming. The entirety of the content as of now is taken from the book 'An Introduction to Programming in Emacs Lisp' by Robert J. Chassel. The contents of the book can easily be found online and I recommend everyone who may read this to go through the book as it provides a much more immersive beginner intro to emacs. This book is great but it is not for programmers. As the author mentions it, programmers generally prefer documentation where they can dive in and dive out. Regardless, I found the book very useful to get me started into Lisp, Emacs Lisp to be exact. 
+
+** History
+
+A bit of history: 
+
+ - Lisp was first developed in the late 1950s at the Massachusetts Institute of Technology for research in artificial intelligence. 
+ - Some people even claim that the name stands for ‘Lots of Isolated Silly Parentheses’ (because of all the parentheses).
+ - Lisp stands for LISt Processing.
+
+** List 
+
+Everything in =lisp= is a list with a few exceptions. Here is a simple good-for-nothing list:
+
+#+BEGIN_SRC emacs-lisp
+(rose violet daisy buttercup)
+#+END_SRC
+
+*** Atoms
+
+A list is surrounded by parentheses and it contains =atoms= or words separated by whitespace. Here is a list structure:
+
+#+BEGIN_SRC emacs-lisp
+(atom atom atom)
+#+END_SRC
+
+The atoms, as they are duly named, are indivisible that is they cannot be split and are taken as a whole word. In general, atoms are divided into two categories, *numbers* and *symbols*. Below are list examples with different types of atoms:  
+
+#+BEGIN_SRC emacs-lisp
+(this list includes "text between quotation marks.") ; Yeap, the string is an atom of its own.
+(this list has (a list inside of it))
+(+ 2 2)
+() ; an empty list
+#+END_SRC
+
+Atoms are categorized into two categories (as seen from the example above): *Numbers* (any numerical number) and *Symbols* (=+=, =foo=, =forward-line=).
+
+Symbols are further categorized into two categories:
+
+- Symbols which have have values attached to it and are called =variables=.
+- Symbols have actions assigned to it and are called =functions=.
+
+The List interpreter evaluates list in three ways: 
+
+- It looks for a /quote/ (') before the list; if there is, the interpreter just gives (echoes) the list.
+- If there is no quote, the interpreter looks at the first element in the list and sees whether it has a function definition. If it does, the interpreter carries out the instructions in the function definition.
+- Otherwise, the interpreter prints an error message.
+
+** Variables
+
+Variables are symbols which stores values. Like other programming languages, the value of a symbol can be anything, such as:
+
+- Symbol
+- Number
+- List 
+- String
+
+Variables are generally evaluated by placing the =[symbol-name]=.
+
+*** Assignment
+
+The are multiple ways to assign a variable. 3 functions will be discussed here:  =set=,  =setq=, and  =let=. See how functions are evaluated [[#evaluation][here]].
+
+#+BEGIN_SRC emacs-lisp
+(set ’flowers ’(rose violet daisy buttercup))
+#+END_SRC
+
+When =set= is used, both arguments requires a quote =’=. Otherwise, the arguments will be evaluated. 
+
+Addendum: When =set= is used without quoting its first argument, it is evaluated before anything else is done. In the example above, if =flowers= did not have a value, an error message (=Symbol’s value as variable is void=) would be shown; If =flowers= did return a value after it was evaluated, =set= would attempt to set the value that was returned. 
+
+#+BEGIN_SRC emacs-lisp
+(setq trees ’(pine fir oak maple)
+      herbivores ’(gazelle antelope zebra))
+#+END_SRC
+
+=setq= is a special form of =set=. It is exactly like =set= except that the first argument is *quoted* automatically. Additionally, as an added convenience, =setq= permits you to set *several* different variables to different values, all in one expression, as show above. 
+
+#+BEGIN_SRC emacs-lisp
+(let ((birch 3)
+      pine
+      fir
+      (oak ’some))
+  (message
+    "Here are %d variables with %s, %s, and %s value."
+    birch pine fir oak))
+#+END_SRC
+
+The =let= expression is a special form in Lisp that is used in most function definitions. =let= is used to attach or bind a symbol to a value in such a way that the Lisp interpreter will not confuse the variable with a variable of the same name that is not part of the function. The sample template for a =let= expression is below.  
+
+#+BEGIN_SRC emacs-lisp
+(let varlist body...)
+#+END_SRC
+
+*Important*: =let= is like a =setq= that is /*temporary*/ and /*local*/. The values set by =let= are automatically undone when the let is finished. The setting only affects expressions that are _inside the bounds_ of the let expression. In other words, the binding of a symbol is visible only in functions called in the =let= form; In Emacs Lisp, scoping is *dynamic*, not *lexical*/. Check out the difference [[http://stackoverflow.com/a/22395580][here]].
+
+** Functions 
+
+Functions are also a list. They are defined by lists and evaluated as a list. As with other languages, the name you use in an
+argument list is private to that particular function definition.
+
+*** Evaluation
+
+Functions are evaluated by placing the symbol iniside the parenthesis like so: =(symbol-name)=. A function /name/ is the first symbol after a parantheses and the /arguments/ to a function are the atoms or list that follows the function. For example,
+
+#+BEGIN_SRC emacs-lisp
+(concat "abc" "def")
+#+END_SRC
+
+/Example of Function Calls:/
+
+Below =message= function is called and =%s= is substitued with =buffer-name= after it itself is called.
+
+#+BEGIN_SRC emacs-lisp
+(message "The name of this buffer is: %s." (buffer-name))
+#+END_SRC
+
+As a comparison, it's very similar to python =print= function. Assuming =buffer_name= is a function,
+
+#+BEGIN_SRC python
+print "The name of this buffer is: %s." %(buffer_name())
+#+END_SRC
+
+A more complex example.
+#+BEGIN_SRC emacs-lisp
+; 'fill-column' is a variable.
+; '-', 'concat', and 'substring' is a function (or more precisely 
+; its a symbol which points to a function definition). 
+
+(message "He saw %d %s"
+         (- fill-column 32)
+         (concat "red "
+                 (substring "The quick brown foxes jumped." 16 21)
+                 " leaping."))
+#+END_SRC
+
+*** Definition
+
+The first expression in a list points to a function definition. A function definition consists of 5 parts: a /symbol/ for defining a function (=defun=), /function-name/, /arguments/ written inside =()=, /documentation/ (recommended), expression to make the function /interactive/, and the function body. The structure: 
+
+#+BEGIN_SRC emacs-lisp
+(defun function-name (arguments...)
+  "documentation..."                  ; optional
+  (interactive argument-passing-info) ; optional
+  body...)
+#+END_SRC
+
+**** Simple Example
+
+A function which multiplies any number by 7 
+
+#+BEGIN_SRC emacs-lisp
+(defun multiply-by-seven (number)
+  "Multiply NUMBER by seven."
+  (* 7 number))
+#+END_SRC
+
+**** Interactive Function
+
+Interactive functions allow one to call the function by pressing keybindings or by typing =M-x= and the =function-name=. There are countless interactive functions. The simple =C-n= is one which moves the cursor to the next line. You define an interactive function by using the keyword =interactive=.
+
+#+BEGIN_SRC emacs-lisp
+(defun multiply-by-seven (number)
+  "Multiply NUMBER by seven."
+  (interactive "p")
+  (message "The result is %d" (* 7 number)))
+#+END_SRC
+
+The keyword =interactive= takes different and multiple arguments. The =p= as the argument to =interactive= Emacs to interpret typing either =C-u= followed by a /number/ or =M= followed by a /number/ as a command to pass that number to the function as its argument. More interactive arguments can be found in the The GNU Emacs Lisp Reference Manual.
+
+** If-Else
+
+The simple =if-else= control flow structure is below: 
+
+#+BEGIN_SRC emacs-lisp
+(if true-or-false-test
+    action-to-carry-out-if-the-test-returns-true
+  action-to-carry-out-if-the-test-returns-false)
+#+END_SRC
+
+An simple example: 
+
+#+BEGIN_SRC emacs-lisp
+(if (> 4 5)
+    (message "4 falsely greater than 5!") 
+  (message "4 is not greater than 5!"))
+#+END_SRC
+
+**** Trut-Falsy
+
+In emacs everything everything except =nil=, =()=, is /false/. Anything that does not evaluate to nil or empty-list is evaluated as =true=.
+
+** Interesting Quirks
+
+- A single quotation mark, =’= , tells the Lisp interpreter that it should return the following expression as written, and not evaluate it as it would if the quote were not there.
+
+- A marker is a specific feature of Emacs Lisp. (In Emacs, locations in a buffer are recorded as markers. When the mark is set with the =C-@= or =C-SPC= command, its position is kept as a marker).
+
+- In Lisp, =nil= is also used to mean =‘false’= and is a synonym for the empty list, =()=.
+
+- In Emacs, if you want the value returned by an expression to appear in any /writeable/ buffer itself rather than in the echo area, type =C-u C-x C-e= instead of =C-x C-e=. This causes the value returned to appear after the expression. For example, if you are in =scratch= buffer, the buffer will look like this:
+
+#+BEGIN_SRC emacs-lisp
+(buffer-name)"*scratch*"
+#+END_SRC

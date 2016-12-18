@@ -1,0 +1,3 @@
+* emaczsh
+
+Everything Emacs with a bit of ZSH.
