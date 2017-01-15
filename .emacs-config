@@ -1,4 +1,15 @@
+;; handle all package stuffs. 
+(require 'package) 
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
+(package-initialize)
+
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(custom-enabled-themes (quote (tango-dark)))
@@ -7,10 +18,11 @@
  '(tool-bar-mode nil))
 
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 169 :width normal )))))
-
-;; The above was present before I added the custom functions
-(package-initialize)
 
 ;; show line numbers by default during start up
 (add-hook 'prog-mode-hook 'linum-mode)
@@ -19,13 +31,24 @@
 ;; make indentation commands use space only (never tab character)
 (setq-default indent-tabs-mode nil)
 
-;; make indentation to 2 spaces for all python files
-(add-hook 'python-mode-hook '(lambda ()
-                               (setq python-indent 2)))
+;; set tab-width for C to default to 4
+(setq-default c-basic-offset 4)
 
 ;; turn on highlight matching brackets when cursor is on one
 (show-paren-mode 1)
 
-; highlight brackets
-(setq show-paren-style 'parenthesis) 
+;; highlight brackets
+(setq show-paren-style 'parenthesis)
 
+;; auto refresh buffer when file is changed
+(global-auto-revert-mode t)
+
+;; enable dump-jump
+(dumb-jump-mode)
+
+;; enable ido-mode vertically
+(require 'ido)
+(require 'ido-vertical-mode)
+(ido-mode 1)
+(ido-vertical-mode 1)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
