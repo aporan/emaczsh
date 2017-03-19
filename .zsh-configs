@@ -1,3 +1,4 @@
+## Terminal Prompt Customization
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[cyan]%}git:(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[cyan]%}) %{$fg[yellow]%}✗"
@@ -14,7 +15,18 @@ if [[ -f ~/.dircolors ]] ; then
     eval $(dircolors -b ~/.dircolors)
 fi
 
-## customize tab completion colors which follows the LS_COLORS from dircolors used above
+# add aliases
+if [ -f ~/.aliases ]; then
+     . ~/.aliases
+fi
+
+# add pythonpath to make python folders to project. E.g. 'PYTHONPATH='/path/to/dir/'
+if [ -f ~/.pythonpath ]; then
+     . ~/.pythonpath
+fi
+
+# customize tab completion colors which follows the LS_COLORS from dircolors used above
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 autoload -Uz compinit
 compinit
+
