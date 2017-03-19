@@ -18,3 +18,8 @@ grep alt /usr/share/X11/xkb/rules/evdev.lst
 #+BEGIN_SRC bash
 setxkbmap -option ctrl:swap_lalt_lctl
 #+END_SRC
+
+To change back to default settings
+#+BEGIN_SRC bash
+setxkbmap -option
+#+END_SRC
