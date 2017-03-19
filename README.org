@@ -1,3 +1,20 @@
 * emaczsh
 
 Everything Emacs with a bit of ZSH.
+
+** Make Life Easy
+
+Check if one is using X keyboard Configuration by:
+#+BEGIN_SRC bash
+X -version
+#+END_SRC
+
+List all the possible options of changes:
+#+BEGIN_SRC bash
+grep alt /usr/share/X11/xkb/rules/evdev.lst
+#+END_SRC
+
+/Swap Left Control and Left Alt Keys/
+#+BEGIN_SRC bash
+setxkbmap -option ctrl:swap_lalt_lctl
+#+END_SRC
