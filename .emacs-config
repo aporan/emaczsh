@@ -1,5 +1,5 @@
-;; handle all package stuffs. 
-(require 'package) 
+;; handle all package stuffs.
+(require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
@@ -13,7 +13,6 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(custom-enabled-themes (quote (tango-dark)))
- '(org-agenda-files nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
@@ -22,7 +21,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 169 :width normal )))))
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 169 :width normal)))))
+
+;; org agenda files
+(setq org-agenda-files (quote ("~/Gitlab/org-anizer/scheduler")))
 
 ;; show line numbers by default during start up
 (add-hook 'prog-mode-hook 'linum-mode)
@@ -45,10 +47,28 @@
 
 ;; enable dump-jump
 (dumb-jump-mode)
+(global-set-key (kbd "M-s n") 'dumb-jump-go)
+(global-set-key (kbd "M-s p") 'dumb-jump-back)
+(global-set-key (kbd "M-s q") 'dumb-jump-quick-look)
+
+;; show-trailing-whitespace
+(setq-default show-trailing-whitespace t)
 
 ;; enable ido-mode vertically
 (require 'ido)
-(require 'ido-vertical-mode)
 (ido-mode 1)
-(ido-vertical-mode 1)
-(setq ido-vertical-define-keys 'C-n-and-C-p-only)
+
+;; multiple cursors
+(require 'multiple-cursors)
+(global-set-key (kbd "M-s M-d") 'mc/mark-next-like-this-word)
+(global-set-key (kbd "M-s M-r") 'mc/mark-previous-like-this-word)
+(global-set-key (kbd "M-s d") 'mc/mark-all-like-this)
+(global-set-key (kbd "M-s M-a") 'mc/edit-lines)
+
+;; global keybindings : explicitly needs to be set by user
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-ca" 'org-agenda)
+
+(setq org-hide-leading-stars t)
+(setq org-todo-keywords
+       '((sequence "UPCOMING(u)" "TODO(t)" "WAITING(w)" "FUTURE(f)" "|" "DONE(d)" "CANCELLED(c)" "ASSIGNED(a)")))
