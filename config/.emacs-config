@@ -72,3 +72,14 @@
 (setq org-hide-leading-stars t)
 (setq org-todo-keywords
        '((sequence "UPCOMING(u)" "TODO(t)" "WAITING(w)" "FUTURE(f)" "|" "DONE(d)" "CANCELLED(c)" "ASSIGNED(a)")))
+
+;; Disable truncate lines
+(set-default 'truncate-lines t)
+
+;; wrap lines only in org mode
+(setq visual-line-mode t)
+(add-hook 'org-mode-hook 'visual-line-mode)
+
+;; addition to wrap lines beautifully in org mode
+;; https://emacs.stackexchange.com/questions/7432/make-visual-line-mode-more-compatible-with-org-mode
+(add-hook 'org-mode-hook 'adaptive-wrap-prefix-mode)
