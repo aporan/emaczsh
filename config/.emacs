@@ -72,7 +72,7 @@
 (require 'org-habit)
 
 ;; org agenda files
-(setq org-agenda-files (quote ("~/Gitlab/org-anizer/tasks")))
+(setq org-agenda-files (quote ("~/Gitlab/organizer/tasks")))
 
 ;; global keybindings : explicitly needs to be set by user
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))

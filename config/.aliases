@@ -1,4 +1,6 @@
 # open aliases
 alias open='xdg-open'
 alias kbd='setxkbmap -option'
-alias alt-kbd='setxkbmap -option ctrl:swap_lalt_lctl'
+alias altkbd='setxkbmap -option ctrl:swap_lalt_lctl'
+
+alias em='emacsclient -c &; disown'
