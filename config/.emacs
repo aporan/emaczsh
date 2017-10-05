@@ -17,7 +17,8 @@
    (quote
     (org latex-preview-pane ripgrep nlinum multiple-cursors dumb-jump adaptive-wrap)))
  '(show-paren-mode t)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(scroll-bar-mode nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -58,8 +59,8 @@
 (setq-default show-trailing-whitespace t)
 
 ;; enable ido-mode vertically
-(require 'ido)
-(ido-mode 1)
+;; (require 'ido)
+;; (ido-mode 1)
 
 ;; multiple cursors
 (require 'multiple-cursors)
@@ -122,3 +123,30 @@
 ;; addition to wrap lines beautifully in org mode
 ;; https://emacs.stackexchange.com/questions/7432/make-visual-line-mode-more-compatible-with-org-mode
 (add-hook 'org-mode-hook 'adaptive-wrap-prefix-mode)
+
+;; swiper
+(ivy-mode 1)
+
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+
+;; make dired less verbose
+(require 'dired-details)
+(setq-default dired-details-hidden-string "---- ")
+(dired-details-install)
