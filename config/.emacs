@@ -1,152 +1,129 @@
-;; handle all package stuffs.
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(custom-enabled-themes (quote (tango-dark)))
- '(package-selected-packages
-   (quote
-    (org latex-preview-pane ripgrep nlinum multiple-cursors dumb-jump adaptive-wrap)))
- '(show-paren-mode t)
- '(tool-bar-mode nil)
- '(scroll-bar-mode nil))
+(setq
+ package-enable-at-startup nil
+ inhibit-startup-screen t
+ ansi-color-faces-vector [default default default italic underline success warning error])
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :width normal)))))
+(setq-default
+ indent-tabs-mode nil
+ truncate-lines t
+ show-trailing-whitespace t
+ c-basic-offset 4)
 
-;; font size
-(set-face-attribute 'default nil :height 180)
-
-;; show line numbers by default during start up
-(add-hook 'prog-mode-hook 'linum-mode)
-(setq linum-format "%4d ")
-
-;; make indentation commands use space only (never tab character)
-(setq-default indent-tabs-mode nil)
-
-;; set tab-width for C to default to 4
-(setq-default c-basic-offset 4)
-
-;; turn on highlight matching brackets when cursor is on one
-(show-paren-mode 1)
-
-;; highlight brackets
-(setq show-paren-style 'parenthesis)
-
-;; auto refresh buffer when file is changed
+(load-theme 'tango-dark t)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(show-paren-mode t)
 (global-auto-revert-mode t)
+(set-face-attribute 'default nil
+                    :family "Ubuntu Mono"
+                    :foundry "DAMA"
+                    :slant 'normal
+                    :height 200
+                    :weight 'normal
+                    :width 'normal)
 
-;; enable dump-jump
-(dumb-jump-mode)
-(global-set-key (kbd "M-s n") 'dumb-jump-go)
-(global-set-key (kbd "M-s p") 'dumb-jump-back)
-(global-set-key (kbd "M-s q") 'dumb-jump-quick-look)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-;; show-trailing-whitespace
-(setq-default show-trailing-whitespace t)
+(use-package org
+             :ensure t
+             :mode ("\\.org\\'" . org-mode)
+             :bind ("C-c a" . org-agenda)
+             :init
+             (progn
+               (setq visual-line-mode t)
+               (add-hook 'org-mode-hook 'visual-line-mode))
+             :config
+             (progn
+                (defun calendar-org-skip-subtree-if-priority (priority)
+                  "Skip an agenda subtree if it has a priority of PRIORITY.
 
-;; enable ido-mode vertically
-;; (require 'ido)
-;; (ido-mode 1)
+                   PRIORITY may be one of the characters ?A, ?B, or ?C."
+                  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+                        (pri-value (* 1000 (- org-lowest-priority priority)))
+                        (pri-current (org-get-priority (thing-at-point 'line t))))
+                    (if (= pri-value pri-current)
+                        subtree-end
+                    nil)))
 
-;; multiple cursors
-(require 'multiple-cursors)
-(global-set-key (kbd "M-s M-d") 'mc/mark-next-like-this-word)
-(global-set-key (kbd "M-s M-r") 'mc/mark-previous-like-this-word)
-(global-set-key (kbd "M-s d") 'mc/mark-all-like-this)
-(global-set-key (kbd "M-s M-a") 'mc/edit-lines)
+                (setq org-agenda-files '("~/Gitlab/organizer/tasks"))
+                (setq org-hide-leading-stars t)
+                (setq org-todo-keywords
+                       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
-;; ORG
-(require 'org-habit)
+                (setq org-enforce-todo-dependencies t)
+                (setq org-agenda-window-setup 'only-window)
+                (setq org-log-into-drawer t)
 
-;; org agenda files
-(setq org-agenda-files (quote ("~/Gitlab/organizer/tasks")))
+                (setq org-default-priority ?Z)
 
-;; global keybindings : explicitly needs to be set by user
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key "\C-ca" 'org-agenda)
+                (setq org-agenda-custom-commands
+                      '(("w" "Custom Compact View"
+                         ((tags "PRIORITY=\"A\""
+                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                 (org-agenda-overriding-header "high-priority tasks:")))
+                          (tags "PRIORITY=\"B\""
+                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                 (org-agenda-overriding-header "reasonable-priority tasks:")))
+                          (agenda "" ((org-agenda-ndays 2)))
+                          (alltodo ""
+                                   ((org-agenda-skip-function
+                                     '(or (calendar-org-skip-subtree-if-priority ?A)
+                                          (calendar-org-skip-subtree-if-priority ?B)
+                                          (org-agenda-skip-if nil '(scheduled deadline))))
+                                    (org-agenda-overriding-header "everything else:")))))))
 
-(setq org-hide-leading-stars t)
-(setq org-todo-keywords
-       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
+                (require 'org-habit)))
 
+(use-package adaptive-wrap
+             :ensure t
+             :init
+             (add-hook 'org-mode-hook 'adaptive-wrap-prefix-mode))
 
-(defun calendar-org-skip-subtree-if-priority (priority)
-  "Skip an agenda subtree if it has a priority of PRIORITY.
+(use-package multiple-cursors
+             :ensure t
+             :config
+             (progn
+               (global-set-key (kbd "C-. C-n") 'mc/mark-next-like-this-word)
+               (global-set-key (kbd "C-. C-p") 'mc/mark-previous-like-this-word)
+               (global-set-key (kbd "C-. C-a") 'mc/mark-all-like-this)
+               (global-set-key (kbd "C-. C-e") 'mc/edit-lines)))
 
-   PRIORITY may be one of the characters ?A, ?B, or ?C."
-  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-        (pri-value (* 1000 (- org-lowest-priority priority)))
-        (pri-current (org-get-priority (thing-at-point 'line t))))
-    (if (= pri-value pri-current)
-        subtree-end
-      nil)))
+(use-package ripgrep
+             :ensure t)
 
-(setq org-agenda-custom-commands
-      '(("w" "Custom Compact View"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "high-priority tasks:")))
-          (agenda "" ((org-agenda-ndays 2)))
-          (alltodo ""
-                   ((org-agenda-skip-function
-                     '(or (calendar-org-skip-subtree-if-priority ?A)
-                          (org-agenda-skip-if nil '(scheduled deadline))))
-                          (org-agenda-overriding-header "everything else:")))))))
+(use-package counsel
+             :ensure t)
 
+(use-package swiper
+             :ensure t
+             :config
+             (progn
+               (ivy-mode 1)
 
-(setq org-enforce-todo-dependencies t)
-(setq org-agenda-window-setup 'only-window)
-(setq org-log-into-drawer t)
-;; END ORG
+	       (setq ivy-display-style 'fancy)
+               (setq ivy-use-virtual-buffers t)
+               (setq enable-recursive-minibuffers t)
 
-;; Disable truncate lines
-(set-default 'truncate-lines t)
-
-;; wrap lines only in org mode
-(setq visual-line-mode t)
-(add-hook 'org-mode-hook 'visual-line-mode)
-
-;; addition to wrap lines beautifully in org mode
-;; https://emacs.stackexchange.com/questions/7432/make-visual-line-mode-more-compatible-with-org-mode
-(add-hook 'org-mode-hook 'adaptive-wrap-prefix-mode)
-
-;; swiper
-(ivy-mode 1)
-
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-
-;; make dired less verbose
-(require 'dired-details)
-(setq-default dired-details-hidden-string "---- ")
-(dired-details-install)
+               (global-set-key "\C-s" 'swiper)
+               (global-set-key (kbd "C-c C-r") 'ivy-resume)
+               (global-set-key (kbd "<f6>") 'ivy-resume)
+               (global-set-key (kbd "M-x") 'counsel-M-x)
+               (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+               (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+               (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+               (global-set-key (kbd "<f1> l") 'counsel-find-library)
+               (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+               (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+               (global-set-key (kbd "C-c g") 'counsel-git)
+               (global-set-key (kbd "C-c j") 'counsel-git-grep)
+               (global-set-key (kbd "C-c k") 'counsel-ag)
+               (global-set-key (kbd "C-x l") 'counsel-locate)
+               (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)))
