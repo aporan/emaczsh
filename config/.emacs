@@ -13,13 +13,18 @@
  indent-tabs-mode nil                                                                       ;; uses spaces instead of tabs
  truncate-lines t                                                                           ;; prevent texts from bleeding over the edge
  show-trailing-whitespace t                                                                 ;; display trailing whitespace with a color
+                                                                                      ;; prog
  c-basic-offset 4)                                                                          ;; uses 4 spaces for indentation in a c/cpp based file
 
+                                                                                ;; COMMANDS
+                                                                                      ;; functs
+(global-auto-revert-mode t)                                                                 ;; auto load buffer after file is changed
+
+                                                                                      ;; visual
 (load-theme 'tango-dark t)                                                                  ;; load built-in theme
 (tool-bar-mode -1)                                                                          ;; remove tool bar from display
 (scroll-bar-mode -1)                                                                        ;; remove scroll bar from display
 (show-paren-mode t)                                                                         ;; highlight paranthesis pair
-(global-auto-revert-mode t)                                                                 ;; auto load buffer after file is changed
 (set-face-attribute 'default nil                                                            ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
@@ -36,7 +41,8 @@
 (eval-when-compile                                                              ;; REQUIRES
   (require 'use-package))                                                                   ;; reduces load time
 
-(require 'bind-key)
+(use-package bind-key
+             :ensure t)
 
 (use-package org
              :ensure t
