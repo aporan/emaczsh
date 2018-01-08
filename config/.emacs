@@ -4,12 +4,12 @@
 
 (package-initialize)                                                                        ;; load packages explicitly in the init file
 
-(setq
+(setq                                                                           ;; SET default global variables
  package-enable-at-startup nil                                                              ;; disable package loading after the init file
  inhibit-startup-screen t                                                                   ;; disable emacs startup splash screen
  ansi-color-faces-vector [default default default italic underline success warning error])
 
-(setq-default
+(setq-default                                                                   ;; SET default local variables set globally
  indent-tabs-mode nil                                                                       ;; uses spaces instead of tabs
  truncate-lines t                                                                           ;; prevent texts from bleeding over the edge
  show-trailing-whitespace t                                                                 ;; display trailing whitespace with a color
@@ -32,6 +32,12 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+
+(eval-when-compile                                                              ;; REQUIRES
+  (require 'use-package))                                                                   ;; reduces load time
+
+(require 'bind-key)
+
 (use-package org
              :ensure t
              :mode ("\\.org\\'" . org-mode)
@@ -42,7 +48,7 @@
                (add-hook 'org-mode-hook 'visual-line-mode))
              :config
              (progn
-                (defun calendar-org-skip-subtree-if-priority (priority)
+                (defun calendar-org-skip-subtree-if-priority (priority)                     ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                   "Skip an agenda subtree if it has a priority of PRIORITY.
 
                    PRIORITY may be one of the characters ?A, ?B, or ?C."
