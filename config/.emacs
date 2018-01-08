@@ -1,26 +1,26 @@
-(require 'package)
-(add-to-list 'package-archives
+(require 'package)                                                                          ;; load package file
+(add-to-list 'package-archives                                                              ;; add melpa to package archives for more packages
              '("melpa" . "https://melpa.org/packages/"))
 
-(package-initialize)
+(package-initialize)                                                                        ;; load packages explicitly in the init file
 
 (setq
- package-enable-at-startup nil
- inhibit-startup-screen t
+ package-enable-at-startup nil                                                              ;; disable package loading after the init file
+ inhibit-startup-screen t                                                                   ;; disable emacs startup splash screen
  ansi-color-faces-vector [default default default italic underline success warning error])
 
 (setq-default
- indent-tabs-mode nil
- truncate-lines t
- show-trailing-whitespace t
- c-basic-offset 4)
+ indent-tabs-mode nil                                                                       ;; uses spaces instead of tabs
+ truncate-lines t                                                                           ;; prevent texts from bleeding over the edge
+ show-trailing-whitespace t                                                                 ;; display trailing whitespace with a color
+ c-basic-offset 4)                                                                          ;; uses 4 spaces for indentation in a c/cpp based file
 
-(load-theme 'tango-dark t)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(show-paren-mode t)
-(global-auto-revert-mode t)
-(set-face-attribute 'default nil
+(load-theme 'tango-dark t)                                                                  ;; load built-in theme
+(tool-bar-mode -1)                                                                          ;; remove tool bar from display
+(scroll-bar-mode -1)                                                                        ;; remove scroll bar from display
+(show-paren-mode t)                                                                         ;; highlight paranthesis pair
+(global-auto-revert-mode t)                                                                 ;; auto load buffer after file is changed
+(set-face-attribute 'default nil                                                            ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
                     :slant 'normal
@@ -28,7 +28,7 @@
                     :weight 'normal
                     :width 'normal)
 
-(unless (package-installed-p 'use-package)
+(unless (package-installed-p 'use-package)                                                  ;; install `use-package` if its not installed
   (package-refresh-contents)
   (package-install 'use-package))
 
@@ -38,7 +38,7 @@
              :bind ("C-c a" . org-agenda)
              :init
              (progn
-               (setq visual-line-mode t)
+               (setq visual-line-mode t)                                                    ;; use visual line mode in org
                (add-hook 'org-mode-hook 'visual-line-mode))
              :config
              (progn
@@ -58,13 +58,14 @@
                 (setq org-todo-keywords
                        '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
-                (setq org-enforce-todo-dependencies t)
-                (setq org-agenda-window-setup 'only-window)
-                (setq org-log-into-drawer t)
+                (setq org-enforce-todo-dependencies t)                                      ;; enforce children dependencies on parents for todo's
+                (setq org-agenda-window-setup 'only-window)                                 ;; open org-agenda in a new window
+                (setq org-log-into-drawer t)                                                ;; log finished tasks into drawers
 
-                (setq org-default-priority ?Z)
+                (setq org-lowest-priority 68)                                               ;; change lowest priority number to extend priority values
+                (setq org-default-priority ?D)                                              ;; change default priority
 
-                (setq org-agenda-custom-commands
+                (setq org-agenda-custom-commands                                            ;; custom org-agenda view with 3 sections filtered according to priorities
                       '(("w" "Custom Compact View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
@@ -108,7 +109,7 @@
              (progn
                (ivy-mode 1)
 
-	       (setq ivy-display-style 'fancy)
+	       (setq ivy-display-style 'fancy)                                              ;; highlight typed words in the selection
                (setq ivy-use-virtual-buffers t)
                (setq enable-recursive-minibuffers t)
 
