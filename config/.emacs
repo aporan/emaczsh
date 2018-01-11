@@ -19,7 +19,7 @@
                                                                                 ;; COMMANDS
                                                                                       ;; functs
 (global-auto-revert-mode t)                                                                 ;; auto load buffer after file is changed
-
+(put 'narrow-to-region 'disabled nil)                                                       ;; allow narrow to region
                                                                                       ;; visual
 (load-theme 'tango-dark t)                                                                  ;; load built-in theme
 (tool-bar-mode -1)                                                                          ;; remove tool bar from display
@@ -140,3 +140,23 @@
                (global-set-key (kbd "C-c k") 'counsel-ag)
                (global-set-key (kbd "C-x l") 'counsel-locate)
                (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)))
+
+(use-package editorconfig
+             :ensure t
+             :config
+             (editorconfig-mode 1))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
