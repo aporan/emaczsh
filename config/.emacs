@@ -47,11 +47,16 @@
 (use-package org
              :ensure t
              :mode ("\\.org\\'" . org-mode)
-             :bind ("C-c a" . org-agenda)
+             :bind (("C-c a" . org-agenda)
+                    :map org-mode-map
+                    ("C-c i" . org-set-tags-command))
              :init
              (progn
-               (setq visual-line-mode t)                                                    ;; use visual line mode in org
-               (add-hook 'org-mode-hook 'visual-line-mode))
+               (setq
+                visual-line-mode t                                                          ;; use visual line mode in org
+                org-src-fontify-natively t)                                                 ;; syntax highlighting for code block
+               (add-hook 'org-mode-hook 'visual-line-mode)
+               (unbind-key "C-c C-q" org-mode-map))
              :config
              (progn
                 (defun calendar-org-skip-subtree-if-priority (priority)                     ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
@@ -65,17 +70,29 @@
                         subtree-end
                     nil)))
 
-                (setq org-agenda-files '("~/Gitlab/organizer/tasks"))
-                (setq org-hide-leading-stars t)
                 (setq org-todo-keywords
-                       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
+                      '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
-                (setq org-enforce-todo-dependencies t)                                      ;; enforce children dependencies on parents for todo's
-                (setq org-agenda-window-setup 'only-window)                                 ;; open org-agenda in a new window
-                (setq org-log-into-drawer t)                                                ;; log finished tasks into drawers
+                (setq org-tag-alist '(("academia" . ?a)                                     ;; categorize header tag list
+                                      ("clean" . ?c)
+                                      ("giving" . ?g)
+                                      ("health" . ?h)
+                                      ("knowledge" . ?k)
+                                      ("money" . ?m)
+                                      ("order" . ?o)
+                                      ("promise" . ?p)
+                                      ("vocation" . ?v)))
 
-                (setq org-lowest-priority 68)                                               ;; change lowest priority number to extend priority values
-                (setq org-default-priority ?D)                                              ;; change default priority
+                (setq org-hide-leading-stars t
+                      org-enforce-todo-dependencies t                                       ;; enforce children dependencies on parents for todo's
+                      org-log-into-drawer t                                                 ;; log finished tasks into drawers
+                      org-lowest-priority 68                                                ;; change lowest priority number to extend priority values
+                      org-default-priority ?D)                                              ;; change default priority
+
+                (setq org-agenda-files '("~/Gitlab/organizer/tasks")
+                      org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
+                      org-agenda-window-setup 'only-window                                  ;; open org-agenda in a new window
+                      org-agenda-tags-column -135)
 
                 (setq org-agenda-custom-commands                                            ;; custom org-agenda view with 3 sections filtered according to priorities
                       '(("w" "Custom Compact View"
@@ -85,13 +102,13 @@
                           (tags "PRIORITY=\"B\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "reasonable-priority tasks:")))
-                          (agenda "" ((org-agenda-ndays 2)))
+                          (agenda "" ((org-agenda-ndays 1)))
                           (alltodo ""
                                    ((org-agenda-skip-function
                                      '(or (calendar-org-skip-subtree-if-priority ?A)
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
-                                    (org-agenda-overriding-header "everything else:")))))))
+                                    (org-agenda-overriding-header "everything-else:")))))))
 
                 (require 'org-habit)))
 
