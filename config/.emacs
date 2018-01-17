@@ -77,7 +77,7 @@
                                       ("clean" . ?c)
                                       ("giving" . ?g)
                                       ("health" . ?h)
-                                      ("knowledge" . ?k)
+                                      ("learning" . ?l)
                                       ("money" . ?m)
                                       ("order" . ?o)
                                       ("promise" . ?p)
