@@ -1,9 +1,0 @@
-  adaptive-wrap      0.5.1         installed             Smart line-wrapping with wrap-prefix
-  dash               20161121.55   installed             A modern list library for Emacs
-  dumb-jump          20161218.110  installed             jump to definition for multiple languages without configuration.
-  f                  20161002.800  installed             Modern API for working with files and directories
-  multiple-cursors   20161021.1431 installed             Multiple cursors for Emacs.
-  nlinum             1.6           installed             Show line numbers in the margin
-  popup              20160709.729  installed             Visual Popup User Interface
-  ripgrep            20161116.211  installed             Front-end for ripgrep, a command line search tool
-  s                  20160928.636  installed             The long lost Emacs string manipulation library.
