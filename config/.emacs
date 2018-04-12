@@ -70,6 +70,12 @@
                         subtree-end
                     nil)))
 
+                (setq org-priority-faces
+                      '((?A . (:foreground "DeepPink" :weight 'bold))
+                        (?B . (:foreground "tomato"))
+                        (?C . (:foreground "turquoise"))
+                        (?D . (:foreground "pale turquoise"))))
+
                 (setq org-todo-keywords
                       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
