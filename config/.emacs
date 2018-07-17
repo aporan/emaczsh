@@ -135,10 +135,7 @@
 (use-package ripgrep
              :ensure t)
 
-(use-package counsel
-             :ensure t)
-
-(use-package swiper
+(use-package ivy
              :ensure t
              :config
              (progn
@@ -146,11 +143,14 @@
 
 	       (setq ivy-display-style 'fancy)                                              ;; highlight typed words in the selection
                (setq ivy-use-virtual-buffers t)
-               (setq enable-recursive-minibuffers t)
 
-               (global-set-key "\C-s" 'swiper)
-               (global-set-key (kbd "C-c C-r") 'ivy-resume)
-               (global-set-key (kbd "<f6>") 'ivy-resume)
+               (global-set-key (kbd "C-c C-s") 'ivy-resume)))
+
+
+(use-package counsel
+             :ensure t
+             :config
+             (progn
                (global-set-key (kbd "M-x") 'counsel-M-x)
                (global-set-key (kbd "C-x C-f") 'counsel-find-file)
                (global-set-key (kbd "<f1> f") 'counsel-describe-function)
@@ -162,12 +162,24 @@
                (global-set-key (kbd "C-c j") 'counsel-git-grep)
                (global-set-key (kbd "C-c k") 'counsel-ag)
                (global-set-key (kbd "C-x l") 'counsel-locate)
+
                (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)))
+
+(use-package swiper
+             :ensure t
+             :config
+             (progn
+               (global-set-key "\C-s" 'swiper)))
 
 (use-package editorconfig
              :ensure t
              :config
              (editorconfig-mode 1))
+
+(use-package ng2-mode
+             :ensure t
+             :config
+             (require 'ng2-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
