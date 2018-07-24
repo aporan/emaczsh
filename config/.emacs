@@ -52,9 +52,9 @@
                     ("C-c i" . org-set-tags-command))
              :init
              (progn
-               (setq
-                visual-line-mode t                                                          ;; use visual line mode in org
-                org-src-fontify-natively t)                                                 ;; syntax highlighting for code block
+               (setq visual-line-mode t                                                          ;; use visual line mode in org
+                     org-src-fontify-natively t)                                                 ;; syntax highlighting for code block
+
                (add-hook 'org-mode-hook 'visual-line-mode)
                (unbind-key "C-c C-q" org-mode-map))
              :config
@@ -92,19 +92,20 @@
                 (setq org-hide-leading-stars t
                       org-enforce-todo-dependencies t                                       ;; enforce children dependencies on parents for todo's
                       org-lowest-priority 68                                                ;; change lowest priority number to extend priority values
+                      org-deadline-warning-days 7                                           ;; change early warning days
                       org-default-priority ?D                                               ;; change default priority
                       org-log-into-drawer t                                                 ;; log finished tasks into drawers
-                      org-log-reschedule '(time)
-                      org-log-redeadline '(time))
+                      org-log-reschedule '(time)                                            ;; make drawer notes when scheduled time is updated
+                      org-log-redeadline '(time))                                           ;; make drawer notes when deadline is updated
 
 
-                (setq org-agenda-files '("~/Gitlab/organizer/tasks/job.txt" "~/Gitlab/organizer/tasks")
+                (setq org-agenda-files '("~/gitlab/organizer/tasks/job.txt" "~/gitlab/organizer/tasks")
                       org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
                       org-agenda-window-setup 'only-window                                  ;; open org-agenda in a new window
-                      org-agenda-tags-column -135)
+                      org-agenda-tags-column -135)                                          ;; column in agenda view where tags are displayed
 
                 (setq org-agenda-custom-commands                                            ;; custom org-agenda view with 3 sections filtered according to priorities
-                      '(("o" "Custom Office View"
+                      '(("o" "Office View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "high-priority tasks:")))
@@ -118,9 +119,9 @@
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
                                     (org-agenda-overriding-header "everything-else:"))))
-                         ((org-agenda-files '("~/Gitlab/organizer/tasks/job.txt"))))
+                         ((org-agenda-files '("~/gitlab/organizer/tasks/job.txt"))))
 
-                        ("p" "Custom Personal View"
+                        ("p" "Personal View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "high-priority tasks:")))
@@ -134,7 +135,7 @@
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
                                     (org-agenda-overriding-header "everything-else:"))))
-                         ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
+                         ((org-agenda-files '("~/gitlab/organizer/tasks/"))))))
 
                 (require 'org-habit)))
 
@@ -215,3 +216,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'dired-find-alternate-file 'disabled nil)
