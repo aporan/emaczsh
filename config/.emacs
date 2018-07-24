@@ -98,7 +98,8 @@
                       org-log-redeadline '(time))
 
 
-                (setq org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
+                (setq org-agenda-files '("~/Gitlab/organizer/tasks/job.txt" "~/Gitlab/organizer/tasks")
+                      org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
                       org-agenda-window-setup 'only-window                                  ;; open org-agenda in a new window
                       org-agenda-tags-column -135)
 
