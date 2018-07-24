@@ -91,17 +91,19 @@
 
                 (setq org-hide-leading-stars t
                       org-enforce-todo-dependencies t                                       ;; enforce children dependencies on parents for todo's
-                      org-log-into-drawer t                                                 ;; log finished tasks into drawers
                       org-lowest-priority 68                                                ;; change lowest priority number to extend priority values
-                      org-default-priority ?D)                                              ;; change default priority
+                      org-default-priority ?D                                               ;; change default priority
+                      org-log-into-drawer t                                                 ;; log finished tasks into drawers
+                      org-log-reschedule '(time)
+                      org-log-redeadline '(time))
 
-                (setq org-agenda-files '("~/Gitlab/organizer/tasks")
-                      org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
+
+                (setq org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
                       org-agenda-window-setup 'only-window                                  ;; open org-agenda in a new window
                       org-agenda-tags-column -135)
 
                 (setq org-agenda-custom-commands                                            ;; custom org-agenda view with 3 sections filtered according to priorities
-                      '(("w" "Custom Compact View"
+                      '(("o" "Custom Office View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "high-priority tasks:")))
@@ -114,7 +116,24 @@
                                      '(or (calendar-org-skip-subtree-if-priority ?A)
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
-                                    (org-agenda-overriding-header "everything-else:")))))))
+                                    (org-agenda-overriding-header "everything-else:"))))
+                         ((org-agenda-files '("~/Gitlab/organizer/tasks/job.txt"))))
+
+                        ("p" "Custom Personal View"
+                         ((tags "PRIORITY=\"A\""
+                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                 (org-agenda-overriding-header "high-priority tasks:")))
+                          (tags "PRIORITY=\"B\""
+                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                                 (org-agenda-overriding-header "reasonable-priority tasks:")))
+                          (agenda "" ((org-agenda-ndays 1)))
+                          (alltodo ""
+                                   ((org-agenda-skip-function
+                                     '(or (calendar-org-skip-subtree-if-priority ?A)
+                                          (calendar-org-skip-subtree-if-priority ?B)
+                                          (org-agenda-skip-if nil '(scheduled deadline))))
+                                    (org-agenda-overriding-header "everything-else:"))))
+                         ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
 
                 (require 'org-habit)))
 
@@ -161,7 +180,7 @@
                (global-set-key (kbd "C-c g") 'counsel-git)
                (global-set-key (kbd "C-c j") 'counsel-git-grep)
                (global-set-key (kbd "C-c k") 'counsel-ag)
-               (global-set-key (kbd "C-x l") 'counsel-locate)
+               (global-set-key (kbd "C-c l") 'counsel-locate)
 
                (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)))
 
