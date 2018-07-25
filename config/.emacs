@@ -99,7 +99,7 @@
                       org-log-redeadline '(time))                                           ;; make drawer notes when deadline is updated
 
 
-                (setq org-agenda-files '("~/gitlab/organizer/tasks/job.txt" "~/gitlab/organizer/tasks")
+                (setq org-agenda-files '("~/Gitlab/organizer/tasks/" "~/Gitlab/organizer/tasks/office")
                       org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
                       org-agenda-window-setup 'only-window                                  ;; open org-agenda in a new window
                       org-agenda-tags-column -135)                                          ;; column in agenda view where tags are displayed
@@ -119,7 +119,7 @@
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
                                     (org-agenda-overriding-header "everything-else:"))))
-                         ((org-agenda-files '("~/gitlab/organizer/tasks/job.txt"))))
+                         ((org-agenda-files '("~/Gitlab/organizer/tasks/office"))))
 
                         ("p" "Personal View"
                          ((tags "PRIORITY=\"A\""
@@ -135,7 +135,7 @@
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
                                     (org-agenda-overriding-header "everything-else:"))))
-                         ((org-agenda-files '("~/gitlab/organizer/tasks/"))))))
+                         ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
 
                 (require 'org-habit)))
 
