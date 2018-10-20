@@ -5,8 +5,10 @@
 (package-initialize)                                                                        ;; load packages explicitly in the init file
 
 (setq                                                                           ;; SET default global variables
+                                                                                      ;; visual
  package-enable-at-startup nil                                                              ;; disable package loading after the init file
  inhibit-startup-screen t                                                                   ;; disable emacs startup splash screen
+ default-frame-alist '((fullscreen . fullboth))                                             ;; always open emacs in fullscreen
  ansi-color-faces-vector [default default default italic underline success warning error])
 
 (setq-default                                                                   ;; SET default local variables set globally
@@ -22,6 +24,7 @@
 (put 'narrow-to-region 'disabled nil)                                                       ;; allow narrow to region
                                                                                       ;; visual
 (load-theme 'tango-dark t)                                                                  ;; load built-in theme
+(menu-bar-mode -1)                                                                          ;; remove menu bar from display
 (tool-bar-mode -1)                                                                          ;; remove tool bar from display
 (scroll-bar-mode -1)                                                                        ;; remove scroll bar from display
 (show-paren-mode t)                                                                         ;; highlight paranthesis pair
@@ -32,6 +35,7 @@
                     :height 200
                     :weight 'normal
                     :width 'normal)
+
 
 (unless (package-installed-p 'use-package)                                                  ;; install `use-package` if its not installed
   (package-refresh-contents)
@@ -112,7 +116,7 @@
                           (tags "PRIORITY=\"B\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "reasonable-priority tasks:")))
-                          (agenda "" ((org-agenda-ndays 1)))
+                          (agenda "" ((org-agenda-span 1)))
                           (alltodo ""
                                    ((org-agenda-skip-function
                                      '(or (calendar-org-skip-subtree-if-priority ?A)
@@ -128,7 +132,7 @@
                           (tags "PRIORITY=\"B\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "reasonable-priority tasks:")))
-                          (agenda "" ((org-agenda-ndays 1)))
+                          (agenda "" ((org-agenda-span 2)))
                           (alltodo ""
                                    ((org-agenda-skip-function
                                      '(or (calendar-org-skip-subtree-if-priority ?A)
@@ -206,6 +210,9 @@
              :ensure t)
 
 (use-package docker-compose-mode
+             :ensure t)
+
+(use-package magit
              :ensure t)
 
 (use-package try
