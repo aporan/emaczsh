@@ -1,6 +1,10 @@
 (require 'package)                                                                          ;; load package file
+
 (add-to-list 'package-archives                                                              ;; add melpa to package archives for more packages
              '("melpa" . "https://melpa.org/packages/"))
+
+(add-to-list 'org-structure-template-alist                                                  ;; add blog template for .org files
+             '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
 
 (package-initialize)                                                                        ;; load packages explicitly in the init file
 
@@ -215,6 +219,15 @@
 (use-package magit
              :ensure t)
 
+(use-package dart-mode
+             :ensure t
+             :config
+             (progn
+               (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/")))
+
+(use-package eyebrowse
+             :ensure t)
+
 (use-package try
              :ensure t)
 
@@ -225,7 +238,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+    (dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
