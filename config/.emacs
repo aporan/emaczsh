@@ -3,9 +3,6 @@
 (add-to-list 'package-archives                                                              ;; add melpa to package archives for more packages
              '("melpa" . "https://melpa.org/packages/"))
 
-(add-to-list 'org-structure-template-alist                                                  ;; add blog template for .org files
-             '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
-
 (package-initialize)                                                                        ;; load packages explicitly in the init file
 
 (setq                                                                           ;; SET default global variables
@@ -18,7 +15,6 @@
 (setq-default                                                                   ;; SET default local variables set globally
  indent-tabs-mode nil                                                                       ;; uses spaces instead of tabs
  truncate-lines t                                                                           ;; prevent texts from bleeding over the edge
- show-trailing-whitespace t                                                                 ;; display trailing whitespace with a color
                                                                                       ;; prog
  c-basic-offset 4)                                                                          ;; uses 4 spaces for indentation in a c/cpp based file
 
@@ -60,14 +56,17 @@
                     ("C-c i" . org-set-tags-command))
              :init
              (progn
-               (setq visual-line-mode t                                                          ;; use visual line mode in org
-                     org-src-fontify-natively t)                                                 ;; syntax highlighting for code block
+               (setq visual-line-mode t                                                      ;; use visual line mode in org
+                     org-src-fontify-natively t)                                             ;; syntax highlighting for code block
 
                (add-hook 'org-mode-hook 'visual-line-mode)
                (unbind-key "C-c C-q" org-mode-map))
              :config
              (progn
-                (defun calendar-org-skip-subtree-if-priority (priority)                     ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+               (add-to-list 'org-structure-template-alist                                    ;; add blog template for .org files
+                            '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
+
+                (defun calendar-org-skip-subtree-if-priority (priority)                      ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                   "Skip an agenda subtree if it has a priority of PRIORITY.
 
                    PRIORITY may be one of the characters ?A, ?B, or ?C."
@@ -87,7 +86,7 @@
                 (setq org-todo-keywords
                       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
-                (setq org-tag-alist '(("academia" . ?a)                                     ;; categorize header tag list
+                (setq org-tag-alist '(("academia" . ?a)                                      ;; categorize header tag list
                                       ("clean" . ?c)
                                       ("giving" . ?g)
                                       ("health" . ?h)
@@ -98,21 +97,22 @@
                                       ("vocation" . ?v)))
 
                 (setq org-hide-leading-stars t
-                      org-enforce-todo-dependencies t                                       ;; enforce children dependencies on parents for todo's
-                      org-lowest-priority 68                                                ;; change lowest priority number to extend priority values
-                      org-deadline-warning-days 7                                           ;; change early warning days
-                      org-default-priority ?D                                               ;; change default priority
-                      org-log-into-drawer t                                                 ;; log finished tasks into drawers
-                      org-log-reschedule '(time)                                            ;; make drawer notes when scheduled time is updated
-                      org-log-redeadline '(time))                                           ;; make drawer notes when deadline is updated
+                      org-enforce-todo-dependencies t                                        ;; enforce children dependencies on parents for todo's
+                      org-lowest-priority 68                                                 ;; change lowest priority number to extend priority values
+                      org-deadline-warning-days 7                                            ;; change early warning days
+                      org-default-priority ?D                                                ;; change default priority
+                      org-log-into-drawer t                                                  ;; log finished tasks into drawers
+                      org-log-reschedule '(time)                                             ;; make drawer notes when scheduled time is updated
+                      org-log-redeadline '(time))                                            ;; make drawer notes when deadline is updated
+
 
 
                 (setq org-agenda-files '("~/Gitlab/organizer/tasks/" "~/Gitlab/organizer/tasks/office")
-                      org-agenda-block-separator ?-                                         ;; separator between different org agenda sections
-                      org-agenda-window-setup 'only-window                                  ;; open org-agenda in a new window
-                      org-agenda-tags-column -135)                                          ;; column in agenda view where tags are displayed
+                      org-agenda-block-separator ?-                                          ;; separator between different org agenda sections
+                      org-agenda-window-setup 'only-window                                   ;; open org-agenda in a new window
+                      org-agenda-tags-column -135)                                           ;; column in agenda view where tags are displayed
 
-                (setq org-agenda-custom-commands                                            ;; custom org-agenda view with 3 sections filtered according to priorities
+                (setq org-agenda-custom-commands                                             ;; custom org-agenda view with 3 sections filtered according to priorities
                       '(("o" "Office View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
@@ -170,7 +170,7 @@
              (progn
                (ivy-mode 1)
 
-	       (setq ivy-display-style 'fancy)                                              ;; highlight typed words in the selection
+               (setq ivy-display-style 'fancy)                                               ;; highlight typed words in the selection
                (setq ivy-use-virtual-buffers t)
 
                (global-set-key (kbd "C-c C-s") 'ivy-resume)))
@@ -225,8 +225,25 @@
              (progn
                (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/")))
 
-(use-package eyebrowse
-             :ensure t)
+;; enable when configurations
+;; are understood
+;; (use-package eyebrowse
+;;              :ensure t)
+
+(use-package whitespace
+             :ensure t
+             :init
+             (progn
+               (setq
+                whitespace-line-column 80
+                whitespace-style '(face lines-tail)
+                show-trailing-whitespace t)
+
+               (add-hook 'prog-mode-hook 'whitespace-mode)
+               (add-hook 'org-mode-hook 'whitespace-mode)
+
+               (custom-set-faces
+                '(whitespace-line ((t (:foreground "SlateGray3")))))))
 
 (use-package try
              :ensure t)
