@@ -251,14 +251,23 @@
 (use-package docker-compose-mode
              :ensure t)
 
+(use-package restclient
+             :ensure t)
+
+(use-package dotenv-mode
+             :ensure t)
+
+(use-package vue-mode
+             :ensure t)
+
 (use-package magit
              :ensure t)
 
-(use-package dart-mode
-             :ensure t
-             :config
-             (progn
-               (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/")))
+;;(use-package dart-mode
+;;             :ensure t
+;;             :config
+;;             (progn
+;;               (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/")))
 
 ;; enable when configurations
 ;; are understood
@@ -280,6 +289,12 @@
                (custom-set-faces
                 '(whitespace-line ((t (:foreground "SlateGray3")))))))
 
+(use-package markdown-mode
+             :ensure t
+             :commands (markdown-mode gfm-mode)
+             :mode  (("\\.md\\'" . gfm-mode))
+             :init (setq markdown-command "multimarkdown"))
+
 (use-package try
              :ensure t)
 
@@ -291,6 +306,7 @@
  '(package-selected-packages
    (quote
     (dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
