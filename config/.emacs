@@ -146,13 +146,13 @@
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                                  (org-agenda-overriding-header "HIGH-PRIORITY ⮔ ﴾͡๏̯͡๏﴿ O'RLY?")))
-                          (tags "life"
+                          (tags "vocation"
                                 ((org-agenda-skip-function
                                   '(or (org-agenda-skip-entry-if 'todo 'done)
                                        (org-agenda-skip-if nil '(scheduled))
                                        (calendar-org-skip-subtree-if-priority ?A)))
                                  (org-agenda-overriding-header "VOCATION ⮔ ¯\\_(ツ)_/¯")))
-                          (tags "vocation"
+                          (tags "leisure"
                                 ((org-agenda-skip-function
                                   '(or (org-agenda-skip-entry-if 'todo 'done)
                                        (org-agenda-skip-if nil '(scheduled))
@@ -289,7 +289,7 @@
                 '(whitespace-line ((t (:foreground "SlateGray3")))))))
 
 (use-package markdown-mode
-             :ensure t
+             :ensure t)
              :commands (markdown-mode gfm-mode)
              :mode  (("\\.md\\'" . gfm-mode))
              :init (setq markdown-command "multimarkdown"))
@@ -304,12 +304,12 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+    (markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(whitespace-line ((t (:foreground "SlateGray3")))))
 (put 'dired-find-alternate-file 'disabled nil)
