@@ -100,10 +100,10 @@
                       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
                 (setq org-tag-alist '(("academia" . ?a)                                      ;; categorize header tag list
-                                      ("blog" . ?b)
-                                      ("errands" . ?e)
-                                      ("leisure" . ?l)
-                                      ("vocation" . ?v)))
+                                      ("blog" . ?b)                                          ;; related to blogging
+                                      ("errands" . ?e)                                       ;; related repeated / one time chores / errands 
+                                      ("leisure" . ?l)                                       ;; related to casual / reading / enjoyment
+                                      ("vocation" . ?v)))                                    ;; career and life goal
 
                 (setq org-hide-leading-stars t
                       org-enforce-todo-dependencies t                                        ;; enforce children dependencies on parents for todo's
@@ -117,8 +117,7 @@
                 (setq org-agenda-files '("~/Gitlab/organizer/tasks/" "~/Gitlab/organizer/tasks/office")
                       org-agenda-block-separator ?                                           ;; 'empty' separator between different org agenda sections
                       org-agenda-window-setup 'only-window                                   ;; open org-agenda in a new window
-                      org-agenda-tags-column -135                                            ;; column in agenda view where tags are displayed
-                      org-agenda-hide-tags-regexp "blog\\|errands\\|leisure\\|vocation"
+                      org-agenda-hide-tags-regexp "blog\\|errands\\|leisure\\|vocation"      ;; hide these tags in agenda view  
                       org-agenda-prefix-format '(                                            ;; agenda view display category and filename
                                                  (agenda . " %i %?-12t % s")
                                                  (todo . " %i %(my-agenda-prefix)")
