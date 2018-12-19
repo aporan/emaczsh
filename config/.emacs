@@ -75,7 +75,20 @@
                         (pri-current (org-get-priority (thing-at-point 'line t))))
                     (if (= pri-value pri-current)
                         subtree-end
-                    nil)))
+                      nil)))
+
+                ;; https://emacs.stackexchange.com/questions/9735/org-agenda-tags-todo-hierarchy-weirdness
+                (defun my-agenda-prefix ()
+                  (format "%s" (my-agenda-indent-string (org-current-level))))
+
+                (defun my-agenda-indent-string (level)
+                  (if (= level 1)
+                      ""
+                    (let ((str ""))
+                      (while (> level 2)
+                        (setq level (1- level)
+                              str (concat str " ")))
+                      (concat str " ↳ "))))
 
                 (setq org-priority-faces
                       '((?A . (:foreground "DeepPink" :weight 'bold))
@@ -87,13 +100,9 @@
                       '((sequence "TODO(t)" "UPCOMING(u)" "WAITING(w@)" "IN-PROGRESS(p)" "|" "DONE(d!)" "CANCELLED(c@)" "ASSIGNED(a@)")))
 
                 (setq org-tag-alist '(("academia" . ?a)                                      ;; categorize header tag list
-                                      ("clean" . ?c)
-                                      ("giving" . ?g)
-                                      ("health" . ?h)
-                                      ("learning" . ?l)
-                                      ("money" . ?m)
-                                      ("order" . ?o)
-                                      ("promise" . ?p)
+                                      ("blog" . ?b)
+                                      ("errands" . ?e)
+                                      ("leisure" . ?l)
                                       ("vocation" . ?v)))
 
                 (setq org-hide-leading-stars t
@@ -105,44 +114,70 @@
                       org-log-reschedule '(time)                                             ;; make drawer notes when scheduled time is updated
                       org-log-redeadline '(time))                                            ;; make drawer notes when deadline is updated
 
-
-
                 (setq org-agenda-files '("~/Gitlab/organizer/tasks/" "~/Gitlab/organizer/tasks/office")
-                      org-agenda-block-separator ?-                                          ;; separator between different org agenda sections
+                      org-agenda-block-separator ?                                           ;; 'empty' separator between different org agenda sections
                       org-agenda-window-setup 'only-window                                   ;; open org-agenda in a new window
-                      org-agenda-tags-column -135)                                           ;; column in agenda view where tags are displayed
+                      org-agenda-tags-column -135                                            ;; column in agenda view where tags are displayed
+                      org-agenda-hide-tags-regexp "blog\\|errands\\|leisure\\|vocation"
+                      org-agenda-prefix-format '(                                            ;; agenda view display category and filename
+                                                 (agenda . " %i %?-12t % s")
+                                                 (todo . " %i %(my-agenda-prefix)")
+                                                 (tags . " %i ")
+                                                 (search . " %i ")))
+
 
                 (setq org-agenda-custom-commands                                             ;; custom org-agenda view with 3 sections filtered according to priorities
                       '(("o" "Office View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                 (org-agenda-overriding-header "high-priority tasks:")))
+                                 (org-agenda-overriding-header "High-Priority ⮔ ┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻")))
                           (tags "PRIORITY=\"B\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                 (org-agenda-overriding-header "reasonable-priority tasks:")))
+                                 (org-agenda-overriding-header "Next IN Queue ⮔ (︺︹︺)")))
                           (agenda "" ((org-agenda-span 1)))
                           (alltodo ""
                                    ((org-agenda-skip-function
                                      '(or (calendar-org-skip-subtree-if-priority ?A)
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
-                                    (org-agenda-overriding-header "everything-else:"))))
+                                    (org-agenda-overriding-header "Everything-Else ⮔ (╯°□°）╯︵ ┻━┻"))))
                          ((org-agenda-files '("~/Gitlab/organizer/tasks/office"))))
 
                         ("p" "Personal View"
                          ((tags "PRIORITY=\"A\""
                                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                 (org-agenda-overriding-header "high-priority tasks:")))
-                          (tags "PRIORITY=\"B\""
-                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                 (org-agenda-overriding-header "reasonable-priority tasks:")))
+                                 (org-agenda-overriding-header "HIGH-PRIORITY ⮔ ﴾͡๏̯͡๏﴿ O'RLY?")))
+                          (tags "life"
+                                ((org-agenda-skip-function
+                                  '(or (org-agenda-skip-entry-if 'todo 'done)
+                                       (org-agenda-skip-if nil '(scheduled))
+                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                 (org-agenda-overriding-header "VOCATION ⮔ ¯\\_(ツ)_/¯")))
+                          (tags "vocation"
+                                ((org-agenda-skip-function
+                                  '(or (org-agenda-skip-entry-if 'todo 'done)
+                                       (org-agenda-skip-if nil '(scheduled))
+                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                 (org-agenda-overriding-header "LEISURE ⮔ ♪~ ᕕ(ᐛ)ᕗ")))
+                          (tags "errands"
+                                ((org-agenda-skip-function
+                                  '(or (org-agenda-skip-entry-if 'todo 'done)
+                                       (org-agenda-skip-if nil '(scheduled))
+                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                 (org-agenda-overriding-header "ERRANDS ⮔ ᕙ(⇀‸↼‶)ᕗ")))
+                          (tags "blog"
+                                ((org-agenda-skip-function
+                                  '(or (org-agenda-skip-entry-if 'todo 'done)
+                                       (org-agenda-skip-if nil '(scheduled))
+                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                 (org-agenda-overriding-header "MAKOG ⮔ (⌐■_■)")))
                           (agenda "" ((org-agenda-span 2)))
                           (alltodo ""
                                    ((org-agenda-skip-function
                                      '(or (calendar-org-skip-subtree-if-priority ?A)
                                           (calendar-org-skip-subtree-if-priority ?B)
                                           (org-agenda-skip-if nil '(scheduled deadline))))
-                                    (org-agenda-overriding-header "everything-else:"))))
+                                    (org-agenda-overriding-header "EVERYTHING-ELSE ⮔ (╯°□°）╯︵ ┻━┻"))))
                          ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
 
                 (require 'org-habit)))
