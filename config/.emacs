@@ -93,10 +93,12 @@
 
                (setq org-capture-templates
                      '(
-                       ("t" "Tasks" entry (file "~/Gitlab/organizer/tasks/capture.org")
-                        "* TODO %? \n  :LOGBOOK: \n   - State \"TODO\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)
-                       ("u" "Upcoming" entry (file "~/Gitlab/organizer/tasks/capture.org")
-                        "* UPCOMING %?\n  SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+5d\"))\n  :LOGBOOK: \n    - State \"UPCOMING\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)))
+                       ("t"                                                                  ;; tasks which needs to be done eventually
+                        "New Todo" entry (file "")
+                        "* TODO %?%^g \n  :LOGBOOK: \n   - State \"TODO\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)
+                       ("u"                                                                  ;; tasks with schedule / deadline
+                        "Upcoming Tasks" entry (file "")
+                        "* UPCOMING %?%^g \n  SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+5d\"))\n  :LOGBOOK: \n    - State \"UPCOMING\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)))
 
                (setq org-priority-faces
                      '((?A . (:foreground "DeepPink" :weight 'bold))
@@ -134,6 +136,7 @@
                      org-log-redeadline 'time)                                               ;; make drawer notes when deadline is updated
 
                (setq org-agenda-files '("~/Gitlab/organizer/tasks/" "~/Gitlab/organizer/tasks/office")
+                     org-default-notes-file "~/Gitlab/organizer/tasks/orgnotes.org"
                      org-agenda-block-separator ?                                            ;; 'empty' separator between different org agenda sections
                      org-agenda-window-setup 'only-window                                    ;; open org-agenda in a new window
                      org-agenda-skip-scheduled-if-deadline-is-shown t                        ;; skip scheduled if deadline is present
