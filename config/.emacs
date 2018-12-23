@@ -79,6 +79,22 @@
                        subtree-end
                      nil)))
 
+               (defun aporan/org-agenda-skip-tag (tag &optional others)                         ;; REFER: https://stackoverflow.com/a/10091330
+                 "Skip all entries that correspond to TAG.
+
+                  If OTHERS is true, skip all entries that do not correspond to TAG."
+                 (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
+                       (current-headline (or (and (org-at-heading-p)
+                                                  (point))
+                                             (save-excursion (org-back-to-heading)))))
+                   (if others
+                       (if (not (member tag (org-get-tags-at current-headline)))
+                           next-headline
+                         nil)
+                     (if (member tag (org-get-tags-at current-headline))
+                         next-headline
+                       nil))))
+
                (defun my-agenda-prefix ()                                                    ;; REFER: https://emacs.stackexchange.com/questions/9735/org-agenda-tags-todo-hierarchy-weirdness
                  (format "%s" (my-agenda-indent-string (org-current-level))))
 
@@ -198,6 +214,11 @@
                                   ((org-agenda-skip-function
                                     '(or (calendar-org-skip-subtree-if-priority ?A)
                                          (calendar-org-skip-subtree-if-priority ?B)
+                                         (aporan/org-agenda-skip-tag "vocation")
+                                         (aporan/org-agenda-skip-tag "leisure")
+                                         (aporan/org-agenda-skip-tag "blog")
+                                         (aporan/org-agenda-skip-tag "errands")
+                                         (aporan/org-agenda-skip-tag "leisure")
                                          (org-agenda-skip-if nil '(scheduled deadline))))
                                    (org-agenda-overriding-header "EVERYTHING-ELSE ⮔ (╯°□°）╯︵ ┻━┻"))))
                         ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
