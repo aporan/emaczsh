@@ -190,24 +190,28 @@
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
                                 (org-agenda-overriding-header "Vocation ⮔ ¯\\_(ツ)_/¯")))
                          (tags "leisure"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
                                 (org-agenda-overriding-header "Leisure ⮔ ♪~ ᕕ(ᐛ)ᕗ")))
                          (tags "errands"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
                                 (org-agenda-overriding-header "Errands ⮔ ᕙ(⇀‸↼‶)ᕗ")))
                          (tags "blog"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (calendar-org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
                                 (org-agenda-overriding-header "Makog ⮔ (⌐■_■)")))
                          (agenda "" ((org-agenda-span 2)))
                          (alltodo ""
