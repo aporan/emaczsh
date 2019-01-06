@@ -171,51 +171,51 @@
                      '(("o" "Office View"
                         ((tags "PRIORITY=\"A\""
                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                (org-agenda-overriding-header "High-Priority ⮔ ┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻")))
+                                (org-agenda-overriding-header "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻  🐾  High-Priority")))
                          (tags "PRIORITY=\"B\""
                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                (org-agenda-overriding-header "Next IN Queue ⮔ (︺︹︺)")))
+                                (org-agenda-overriding-header "(︺︹︺)  🐾  Next IN Queue ")))
                          (agenda "" ((org-agenda-span 1)))
                          (alltodo ""
                                   ((org-agenda-skip-function
                                     '(or (aporan/org-skip-subtree-if-priority ?A)
                                          (aporan/org-skip-subtree-if-priority ?B)
                                          (org-agenda-skip-if nil '(scheduled deadline))))
-                                   (org-agenda-overriding-header "Everything-Else ⮔ (╯°□°）╯︵ ┻━┻"))))
+                                   (org-agenda-overriding-header "(╯°□°）╯︵ ┻━┻  🐾  Everything-Else"))))
                         ((org-agenda-files '("~/Gitlab/organizer/tasks/office"))))
 
                        ("p" "Personal View"
                         ((tags "PRIORITY=\"A\""
                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                (org-agenda-overriding-header "High-Priority ⮔ ﴾͡๏̯͡๏﴿ O'RLY?")))
+                                (org-agenda-overriding-header "﴾͡๏̯͡๏﴿ O'RLY?  🐾  High-Priority")))
                          (tags "vocation"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (aporan/org-skip-subtree-if-priority ?A)))
                                 (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                                (org-agenda-overriding-header "Vocation ⮔ ¯\\_(ツ)_/¯")))
+                                (org-agenda-overriding-header "¯\\_(ツ)_/¯  ♉  Vocation")))
                          (tags "leisure"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (aporan/org-skip-subtree-if-priority ?A)))
                                 (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                                (org-agenda-overriding-header "Leisure ⮔ ♪~ ᕕ(ᐛ)ᕗ")))
+                                (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ  🐾  Leisure")))
                          (tags "errands"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (aporan/org-skip-subtree-if-priority ?A)))
                                 (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                                (org-agenda-overriding-header "Errands ⮔ ᕙ(⇀‸↼‶)ᕗ")))
+                                (org-agenda-overriding-header "ᕙ(⇀‸↼‶)ᕗ  🐾  Errands")))
                          (tags "blog"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
                                       (aporan/org-skip-subtree-if-priority ?A)))
                                 (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                                (org-agenda-overriding-header "Makog ⮔ (⌐■_■)")))
+                                (org-agenda-overriding-header "(⌐■_■)  🐾  Makog")))
                          (agenda "" ((org-agenda-span 2)))
                          (alltodo ""
                                   ((org-agenda-skip-function
