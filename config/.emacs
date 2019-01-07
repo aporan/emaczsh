@@ -1,34 +1,34 @@
-(require 'package)                                                                          ;; load package file
+(require 'package)                                                                            ;; load package file
 
-(add-to-list 'package-archives                                                              ;; add melpa to package archives for more packages
+(add-to-list 'package-archives                                                                ;; add melpa to package archives for more packages
              '("melpa" . "https://melpa.org/packages/"))
 
-(package-initialize)                                                                        ;; load packages explicitly in the init file
+(package-initialize)                                                                          ;; load packages explicitly in the init file
 
-(setq                                                                           ;; SET default global variables
-                                                                                      ;; visual
- package-enable-at-startup nil                                                              ;; disable package loading after the init file
- inhibit-startup-screen t                                                                   ;; disable emacs startup splash screen
- default-frame-alist '((fullscreen . fullboth))                                             ;; always open emacs in fullscreen
+(setq                                                                             ;; SET default global variables
+                                                                                        ;; visual
+ package-enable-at-startup nil                                                                ;; disable package loading after the init file
+ inhibit-startup-screen t                                                                     ;; disable emacs startup splash screen
+ default-frame-alist '((fullscreen . fullboth))                                               ;; always open emacs in fullscreen
  ansi-color-faces-vector [default default default italic underline success warning error])
 
-(setq-default                                                                   ;; SET default local variables set globally
- indent-tabs-mode nil                                                                       ;; uses spaces instead of tabs
- truncate-lines t                                                                           ;; prevent texts from bleeding over the edge
-                                                                                      ;; prog
- c-basic-offset 4)                                                                          ;; uses 4 spaces for indentation in a c/cpp based file
+(setq-default                                                                     ;; SET default local variables set globally
+ indent-tabs-mode nil                                                                         ;; uses spaces instead of tabs
+ truncate-lines t                                                                             ;; prevent texts from bleeding over the edge
+                                                                                        ;; prog
+ c-basic-offset 4)                                                                            ;; uses 4 spaces for indentation in a c/cpp based file
 
-                                                                                ;; COMMANDS
-                                                                                      ;; functs
-(global-auto-revert-mode t)                                                                 ;; auto load buffer after file is changed
-(put 'narrow-to-region 'disabled nil)                                                       ;; allow narrow to region
-                                                                                      ;; visual
-(load-theme 'tango-dark t)                                                                  ;; load built-in theme
-(menu-bar-mode -1)                                                                          ;; remove menu bar from display
-(tool-bar-mode -1)                                                                          ;; remove tool bar from display
-(scroll-bar-mode -1)                                                                        ;; remove scroll bar from display
-(show-paren-mode t)                                                                         ;; highlight paranthesis pair
-(set-face-attribute 'default nil                                                            ;; font face and style
+                                                                                  ;; COMMANDS
+                                                                                        ;; functs
+(global-auto-revert-mode t)                                                                   ;; auto load buffer after file is changed
+(put 'narrow-to-region 'disabled nil)                                                         ;; allow narrow to region
+                                                                                        ;; visual
+(load-theme 'tango-dark t)                                                                    ;; load built-in theme
+(menu-bar-mode -1)                                                                            ;; remove menu bar from display
+(tool-bar-mode -1)                                                                            ;; remove tool bar from display
+(scroll-bar-mode -1)                                                                          ;; remove scroll bar from display
+(show-paren-mode t)                                                                           ;; highlight paranthesis pair
+(set-face-attribute 'default nil                                                              ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
                     :slant 'normal
@@ -37,13 +37,13 @@
                     :width 'normal)
 
 
-(unless (package-installed-p 'use-package)                                                  ;; install `use-package` if its not installed
+(unless (package-installed-p 'use-package)                                                    ;; install `use-package` if its not installed
   (package-refresh-contents)
   (package-install 'use-package))
 
 
-(eval-when-compile                                                              ;; REQUIRES
-  (require 'use-package))                                                                   ;; reduces load time
+(eval-when-compile                                                                ;; REQUIRES
+  (require 'use-package))                                                                     ;; reduces load time
 
 (use-package bind-key
              :ensure t)
@@ -56,19 +56,19 @@
                     ("C-c i" . org-set-tags-command))
              :init
              (progn
-               (setq visual-line-mode t                                                      ;; use visual line mode in org
-                     org-src-fontify-natively t)                                             ;; syntax highlighting for code block
+               (setq visual-line-mode t                                                       ;; use visual line mode in org
+                     org-src-fontify-natively t)                                              ;; syntax highlighting for code block
 
                (add-hook 'org-mode-hook 'visual-line-mode)
                (unbind-key "C-c C-q" org-mode-map))
              :config
              (progn
-               (global-set-key (kbd "C-c c") 'org-capture)                                   ;; org capture
+               (global-set-key (kbd "C-c c") 'org-capture)                                    ;; org capture
 
-               (add-to-list 'org-structure-template-alist                                    ;; add blog easy template for .org files
+               (add-to-list 'org-structure-template-alist                                     ;; add blog easy template for .org files
                             '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
 
-               (defun calendar-org-skip-subtree-if-priority (priority)                       ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+               (defun aporan/org-skip-subtree-if-priority (priority)                          ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                  "Skip an agenda subtree if it has a priority of PRIORITY.
 
                   PRIORITY may be one of the characters ?A, ?B, or ?C."
@@ -79,7 +79,7 @@
                        subtree-end
                      nil)))
 
-               (defun aporan/org-agenda-skip-tag (tag &optional others)                         ;; REFER: https://stackoverflow.com/a/10091330
+               (defun aporan/org-agenda-skip-tag (tag &optional others)                       ;; REFER: https://stackoverflow.com/a/10091330
                  "Skip all entries that correspond to TAG.
 
                   If OTHERS is true, skip all entries that do not correspond to TAG."
@@ -95,17 +95,20 @@
                          next-headline
                        nil))))
 
-               (defun my-agenda-prefix ()                                                    ;; REFER: https://emacs.stackexchange.com/questions/9735/org-agenda-tags-todo-hierarchy-weirdness
-                 (format "%s" (my-agenda-indent-string (org-current-level))))
+               (defun aporan/agenda-prefix ()                                                 ;; REFER: https://emacs.stackexchange.com/questions/9735/org-agenda-tags-todo-hierarchy-weirdness
+                 (format "%s" (aporan/agenda-indent-string (org-current-level) (org-get-priority (thing-at-point 'line t)))))
 
-               (defun my-agenda-indent-string (level)
+               (defun aporan/agenda-indent-string (level priority)
                  (if (= level 1)
                      ""
-                   (let ((str ""))
-                     (while (> level 2)
-                       (setq level (1- level)
-                             str (concat str " ")))
-                     (concat str " ↳ "))))
+                   (if (= priority 0)
+                       (let ((str ""))
+                         (while (> level 2)
+                           (setq level (1- level)
+                                 str (concat str " ")))
+                         (concat str "  ↯ "))
+                     (let ((str ""))
+                       (concat str "↬ ")))))
 
                (setq org-capture-templates
                      '(
@@ -159,7 +162,7 @@
                      org-agenda-hide-tags-regexp "blog\\|errands\\|leisure\\|vocation"       ;; hide these tags in agenda view
                      org-agenda-prefix-format '(                                             ;; agenda view display category and filename
                                                 (agenda . " %i %?-12t % s")
-                                                (todo . " %i %(my-agenda-prefix)")
+                                                (todo . " %i %(aporan/agenda-prefix)")
                                                 (tags . " %i ")
                                                 (search . " %i ")))
 
@@ -168,56 +171,56 @@
                      '(("o" "Office View"
                         ((tags "PRIORITY=\"A\""
                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                (org-agenda-overriding-header "High-Priority ⮔ ┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻")))
+                                (org-agenda-overriding-header "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻  🐾  High-Priority")))
                          (tags "PRIORITY=\"B\""
                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                (org-agenda-overriding-header "Next IN Queue ⮔ (︺︹︺)")))
+                                (org-agenda-overriding-header "(︺︹︺)  🐾  Next IN Queue ")))
                          (agenda "" ((org-agenda-span 1)))
                          (alltodo ""
                                   ((org-agenda-skip-function
-                                    '(or (calendar-org-skip-subtree-if-priority ?A)
-                                         (calendar-org-skip-subtree-if-priority ?B)
+                                    '(or (aporan/org-skip-subtree-if-priority ?A)
+                                         (aporan/org-skip-subtree-if-priority ?B)
                                          (org-agenda-skip-if nil '(scheduled deadline))))
-                                   (org-agenda-overriding-header "Everything-Else ⮔ (╯°□°）╯︵ ┻━┻"))))
+                                   (org-agenda-overriding-header "(╯°□°）╯︵ ┻━┻  🐾  Everything-Else"))))
                         ((org-agenda-files '("~/Gitlab/organizer/tasks/office"))))
 
                        ("p" "Personal View"
                         ((tags "PRIORITY=\"A\""
                                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                                (org-agenda-overriding-header "High-Priority ⮔ ﴾͡๏̯͡๏﴿ O'RLY?")))
+                                (org-agenda-overriding-header "﴾͡๏̯͡๏﴿ O'RLY?  🐾  High-Priority")))
                          (tags "vocation"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
-                                      (calendar-org-skip-subtree-if-priority ?A)))
-                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
-                                (org-agenda-overriding-header "Vocation ⮔ ¯\\_(ツ)_/¯")))
+                                      (aporan/org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                                (org-agenda-overriding-header "¯\\_(ツ)_/¯  ♉  Vocation")))
                          (tags "leisure"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
-                                      (calendar-org-skip-subtree-if-priority ?A)))
-                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
-                                (org-agenda-overriding-header "Leisure ⮔ ♪~ ᕕ(ᐛ)ᕗ")))
+                                      (aporan/org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                                (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ  🐾  Leisure")))
                          (tags "errands"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
-                                      (calendar-org-skip-subtree-if-priority ?A)))
-                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
-                                (org-agenda-overriding-header "Errands ⮔ ᕙ(⇀‸↼‶)ᕗ")))
+                                      (aporan/org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                                (org-agenda-overriding-header "ᕙ(⇀‸↼‶)ᕗ  🐾  Errands")))
                          (tags "blog"
                                ((org-agenda-skip-function
                                  '(or (org-agenda-skip-entry-if 'todo 'done)
                                       (org-agenda-skip-if nil '(scheduled))
-                                      (calendar-org-skip-subtree-if-priority ?A)))
-                                (org-agenda-prefix-format '((tags . " %i %(my-agenda-prefix)")))
-                                (org-agenda-overriding-header "Makog ⮔ (⌐■_■)")))
+                                      (aporan/org-skip-subtree-if-priority ?A)))
+                                (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                                (org-agenda-overriding-header "(⌐■_■)  🐾  Makog")))
                          (agenda "" ((org-agenda-span 2)))
                          (alltodo ""
                                   ((org-agenda-skip-function
-                                    '(or (calendar-org-skip-subtree-if-priority ?A)
-                                         (calendar-org-skip-subtree-if-priority ?B)
+                                    '(or (aporan/org-skip-subtree-if-priority ?A)
+                                         (aporan/org-skip-subtree-if-priority ?B)
                                          (aporan/org-agenda-skip-tag "vocation")
                                          (aporan/org-agenda-skip-tag "leisure")
                                          (aporan/org-agenda-skip-tag "blog")
