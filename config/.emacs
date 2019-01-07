@@ -151,7 +151,7 @@
                      org-log-reschedule 'time                                                ;; make drawer notes when scheduled time is updated
                      org-log-redeadline 'time)                                               ;; make drawer notes when deadline is updated
 
-               (setq org-agenda-files '("~/Gitlab/organizer/tasks/" "~/Gitlab/organizer/tasks/office")
+               (setq org-agenda-files '("~/Gitlab/organizer/tasks" "~/Gitlab/organizer/tasks/office")
                      org-default-notes-file "~/Gitlab/organizer/tasks/orgnotes.org"
                      org-agenda-block-separator ?                                            ;; 'empty' separator between different org agenda sections
                      org-agenda-window-setup 'only-window                                    ;; open org-agenda in a new window
