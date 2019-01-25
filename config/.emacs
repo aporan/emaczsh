@@ -14,6 +14,7 @@
 
 (setq-default                                                                     ;; SET default local variables set globally
  indent-tabs-mode nil                                                                         ;; uses spaces instead of tabs
+ tab-width 4                                                                                  ;; tab display character width in columns
  truncate-lines t                                                                             ;; prevent texts from bleeding over the edge
                                                                                         ;; prog
  c-basic-offset 4)                                                                            ;; uses 4 spaces for indentation in a c/cpp based file
@@ -258,7 +259,8 @@
                (setq ivy-display-style 'fancy)                                               ;; highlight typed words in the selection
                (setq ivy-use-virtual-buffers t)
 
-               (global-set-key (kbd "C-c C-s") 'ivy-resume)))
+               (global-set-key (kbd "C-c C-s") 'ivy-resume)
+               (global-set-key (kbd "C-c C-o") 'ivy-occur)))
 
 
 (use-package counsel
@@ -340,7 +342,7 @@
                 '(whitespace-line ((t (:foreground "SlateGray3")))))))
 
 (use-package markdown-mode
-             :ensure t)
+             :ensure t
              :commands (markdown-mode gfm-mode)
              :mode  (("\\.md\\'" . gfm-mode))
              :init (setq markdown-command "multimarkdown"))
