@@ -52,20 +52,13 @@
 (use-package org
              :ensure t
              :mode ("\\.org\\'" . org-mode)
-             :bind (("C-c a" . org-agenda)
-                    ("C-c i" . org-set-tags-command))
+             :bind (("C-c a" . org-agenda)                                                    ;; org agenda
+                    ("C-c c" . org-capture)                                                   ;; org capture
+                    ("C-c i" . org-set-tags-command))                                         ;; org insert tags
+             :hook (org-mode . visual-line-mode)
              :init
-             (setq visual-line-mode t                                                         ;; use visual line mode in org
-                   org-src-fontify-natively t)                                                ;; syntax highlighting for code block
-
-             (add-hook 'org-mode-hook 'visual-line-mode)
              (unbind-key "C-c C-q" org-mode-map)
              :config
-             (global-set-key (kbd "C-c c") 'org-capture)                                      ;; org capture
-
-             (add-to-list 'org-structure-template-alist                                       ;; add blog easy template for .org files
-                          '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
-
              (defun aporan/org-skip-subtree-if-priority (priority)                            ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -107,6 +100,14 @@
                        (concat str "  ↯ "))
                    (let ((str ""))
                      (concat str "↬ ")))))
+
+
+             (add-to-list 'org-structure-template-alist                                       ;; add blog easy template for .org files
+                          '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
+
+
+             (setq visual-line-mode t                                                         ;; use visual line mode in org
+                   org-src-fontify-natively t)                                                ;; syntax highlighting for code block
 
              (setq org-capture-templates
                    '(
@@ -236,18 +237,18 @@
 
 (use-package multiple-cursors
              :ensure t
-             :bind (("C-. C-n" . 'mc/mark-next-like-this-word)
-                    ("C-. C-p" . 'mc/mark-previous-like-this-word)
-                    ("C-. C-a" . 'mc/mark-all-like-this)
-                    ("C-. C-e" . 'mc/edit-lines)))
+             :bind (("C-. C-n" . mc/mark-next-like-this-word)
+                    ("C-. C-p" . mc/mark-previous-like-this-word)
+                    ("C-. C-a" . mc/mark-all-like-this)
+                    ("C-. C-e" . mc/edit-lines)))
 
 (use-package ripgrep
              :ensure t)
 
 (use-package ivy
              :ensure t
-             :bind (("C-c C-s" . 'ivy-resume)
-                    ("C-c C-o" . 'ivy-occur))
+             :bind (("C-c C-s" . ivy-resume)
+                    ("C-c C-o" . ivy-occur))
              :init
              (ivy-mode 1)
              :config
@@ -256,15 +257,15 @@
 
 (use-package counsel
              :ensure t
-             :bind (("M-x" . 'counsel-M-x)
-                    ("C-x C-f" . 'counsel-find-file)
-                    ("C-c g" . 'counsel-git)
-                    ("C-c j" . 'counsel-git-grep)
-                    ("C-c l" . 'counsel-locate)))
+             :bind (("M-x" . counsel-M-x)
+                    ("C-x C-f" . counsel-find-file)
+                    ("C-c g" . counsel-git)
+                    ("C-c r" . counsel-git-grep)
+                    ("C-c l" . counsel-locate)))
 
 (use-package swiper
              :ensure t
-             :bind (("\C-s" . 'swiper)))
+             :bind (("C-s" . swiper)))
 
 (use-package editorconfig
              :ensure t
@@ -326,9 +327,9 @@
 (use-package calfw-org
              :ensure t
              :after (calfw)
-             :bind (("C-c o" . 'cfw:open-org-calendar))
+             :bind (("C-c o" . cfw:open-org-calendar))
              :init
-             (setq cfw:render-line-breaker 'cfw:render-line-breaker-none)
+             (setq cfw:render-line-breaker 'cfw:render-line-breaker-none)                    ;; truncate long lines
 
              (set-face-attribute 'cfw:face-title nil                                         ;; year and month title
                                  :foreground "#f0dfaf"
