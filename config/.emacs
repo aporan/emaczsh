@@ -262,7 +262,6 @@
                (global-set-key (kbd "C-c C-s") 'ivy-resume)
                (global-set-key (kbd "C-c C-o") 'ivy-occur)))
 
-
 (use-package counsel
              :ensure t
              :config
@@ -315,16 +314,15 @@
 (use-package magit
              :ensure t)
 
-;;(use-package dart-mode
-;;             :ensure t
-;;             :config
-;;             (progn
-;;               (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/")))
+(use-package dart-mode
+            :disabled
+            :config
+            (progn
+              (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/")))
 
-;; enable when configurations
-;; are understood
-;; (use-package eyebrowse
-;;              :ensure t)
+;; enable when configurations are understood
+(use-package eyebrowse
+             :disabled)
 
 (use-package whitespace
              :ensure t
@@ -338,14 +336,68 @@
                (add-hook 'prog-mode-hook 'whitespace-mode)
                (add-hook 'org-mode-hook 'whitespace-mode)
 
-               (custom-set-faces
-                '(whitespace-line ((t (:foreground "SlateGray3")))))))
+               (set-face-attribute 'whitespace-line nil
+                                   :foreground "SlateGray3")))
 
 (use-package markdown-mode
              :ensure t
              :commands (markdown-mode gfm-mode)
              :mode  (("\\.md\\'" . gfm-mode))
              :init (setq markdown-command "multimarkdown"))
+
+(use-package calfw
+             :ensure t)
+
+(use-package calfw-org
+             :ensure t
+             :after (calfw)
+             :bind (("C-c o" . 'cfw:open-org-calendar))
+             :init
+             (progn
+               (setq cfw:render-line-breaker 'cfw:render-line-breaker-none)
+
+               (set-face-attribute 'cfw:face-title nil                                       ;; year and month title
+                                   :foreground "#f0dfaf"
+                                   :height 1.6
+                                   :inherit 'variable-pitch)
+
+               (set-face-attribute 'cfw:face-header nil                                      ;; weekday header
+                                   :foreground "##d0bf8f"
+                                   :background nil
+                                   :weight 'bold
+                                   :height 1.0)
+
+               (set-face-attribute 'cfw:face-sunday nil                                      ;; sunday header
+                                   :foreground "#cc9393"
+                                   :background "Gray10"
+                                   :weight 'bold)
+
+               (set-face-attribute 'cfw:face-saturday nil                                    ;; saturday header
+                                   :foreground nil
+                                   :background "Gray10")
+
+               (set-face-attribute 'cfw:face-select nil                                      ;; today highlight
+                                   :background "#fff7d7")
+
+               (set-face-attribute 'cfw:face-today-title nil                                 ;; today title
+                                   :foreground "red4"
+                                   :background nil
+                                   :height 1.0)
+
+               (set-face-attribute 'cfw:face-toolbar nil                                     ;; entire toolbar 
+                                   :foreground nil
+                                   :background nil
+                                   :height 1.0)
+
+               (set-face-attribute 'cfw:face-toolbar-button-on nil                           ;; active tool bar
+                                   :foreground "#cc9393"
+                                   :background "Gray10"
+                                   :height 1.0)
+
+               (set-face-attribute 'cfw:face-toolbar-button-off nil                          ;; in-active toolbar buttons
+                                   :foreground "Gray60"
+                                   :background "##d0bf8f"
+                                   :height 1.0)))
 
 (use-package try
              :ensure t)
@@ -357,12 +409,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+    (try calfw-org calfw magit vue-mode dotenv-mode restclient docker-compose-mode dockerfile-mode ng2-mode markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(whitespace-line ((t (:foreground "SlateGray3")))))
 (put 'dired-find-alternate-file 'disabled nil)
