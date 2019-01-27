@@ -158,7 +158,7 @@
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
-                   org-agenda-hide-tags-regexp "blog\\|errands\\|leisure\\|vocation"          ;; hide these tags in agenda view
+                   org-agenda-hide-tags-regexp "errands\\|leisure\\|vocation"                 ;; hide these tags in agenda view
                    org-agenda-prefix-format '(                                                ;; agenda view display category and filename
                                               (agenda . " %i %?-12t % s")
                                               (todo . " %i %(aporan/agenda-prefix)")
@@ -187,6 +187,7 @@
                       ((tags "PRIORITY=\"A\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                               (org-agenda-overriding-header "﴾͡๏̯͡๏﴿ O'RLY?  🐾  High-Priority")))
+                       (agenda "" ((org-agenda-span 3)))
                        (tags "vocation"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
@@ -208,21 +209,12 @@
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "ᕙ(⇀‸↼‶)ᕗ  🐾  Errands")))
-                       (tags "blog"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "(⌐■_■)  🐾  Makog")))
-                       (agenda "" ((org-agenda-span 2)))
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
                                        (aporan/org-agenda-skip-tag "vocation")
                                        (aporan/org-agenda-skip-tag "leisure")
-                                       (aporan/org-agenda-skip-tag "blog")
                                        (aporan/org-agenda-skip-tag "errands")
                                        (aporan/org-agenda-skip-tag "leisure")
                                        (org-agenda-skip-if nil '(scheduled deadline))))
