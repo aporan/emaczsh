@@ -56,8 +56,6 @@
                     ("C-c c" . org-capture)                                                   ;; org capture
                     ("C-c i" . org-set-tags-command))                                         ;; org insert tags
              :hook (org-mode . visual-line-mode)
-             :init
-             (unbind-key "C-c C-q" org-mode-map)
              :config
              (defun aporan/org-skip-subtree-if-priority (priority)                            ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                "Skip an agenda subtree if it has a priority of PRIORITY.
@@ -302,9 +300,10 @@
              (setq whitespace-line-column 80
                    whitespace-style '(face lines-tail)
                    show-trailing-whitespace t)
-
+             :config
              (set-face-attribute 'whitespace-line nil
-                                 :foreground "SlateGray3"))
+                                 :foreground "SlateGray3"
+                                 :background 'unspecified))
 
 (use-package markdown-mode
              :ensure t
@@ -321,8 +320,10 @@
              :after (calfw)
              :bind (("C-c o" . cfw:open-org-calendar))
              :init
-             (setq cfw:render-line-breaker 'cfw:render-line-breaker-none)                    ;; truncate long lines
-
+             (setq cfw:render-line-breaker 'cfw:render-line-breaker-none                     ;; truncate long lines
+                   cfw:face-item-separator-color 'unspecified)
+                   
+             :config
              (set-face-attribute 'cfw:face-title nil                                         ;; year and month title
                                  :foreground "#f0dfaf"
                                  :height 1.6
@@ -340,7 +341,7 @@
                                  :weight 'bold)
 
              (set-face-attribute 'cfw:face-saturday nil                                      ;; saturday header
-                                 :foreground nil
+                                 :foreground 'unspecified
                                  :background "Gray10")
 
              (set-face-attribute 'cfw:face-select nil                                        ;; today highlight
@@ -348,12 +349,12 @@
 
              (set-face-attribute 'cfw:face-today-title nil                                   ;; today title
                                  :foreground "red4"
-                                 :background nil
+                                 :background 'unspecified
                                  :height 1.0)
 
              (set-face-attribute 'cfw:face-toolbar nil                                       ;; entire toolbar
-                                 :foreground nil
-                                 :background nil
+                                 :foreground 'unspecified
+                                 :background 'unspecified
                                  :height 1.0)
 
              (set-face-attribute 'cfw:face-toolbar-button-on nil                             ;; active tool bar
