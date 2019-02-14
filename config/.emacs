@@ -352,6 +352,10 @@
                                  :background 'unspecified
                                  :height 1.0)
 
+             (set-face-attribute 'cfw:face-today nil                                         ;; current days tasks 
+                                 :foreground "#f9e07c"
+                                 :height 1.0)
+
              (set-face-attribute 'cfw:face-toolbar nil                                       ;; entire toolbar
                                  :foreground 'unspecified
                                  :background 'unspecified
