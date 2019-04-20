@@ -10,6 +10,7 @@
  package-enable-at-startup nil                                                                ;; disable package loading after the init file
  inhibit-startup-screen t                                                                     ;; disable emacs startup splash screen
  default-frame-alist '((fullscreen . fullboth))                                               ;; always open emacs in fullscreen
+
  ansi-color-faces-vector [default default default italic underline success warning error])
 
 (setq-default                                                                     ;; SET default local variables set globally
@@ -25,10 +26,14 @@
 (put 'narrow-to-region 'disabled nil)                                                         ;; allow narrow to region
                                                                                         ;; visual
 (load-theme 'tango-dark t)                                                                    ;; load built-in theme
+(fringe-mode 3)                                                                               ;; fringe border is now half-width on either side
 (menu-bar-mode -1)                                                                            ;; remove menu bar from display
 (tool-bar-mode -1)                                                                            ;; remove tool bar from display
 (scroll-bar-mode -1)                                                                          ;; remove scroll bar from display
 (show-paren-mode t)                                                                           ;; highlight paranthesis pair
+(set-face-attribute 'vertical-border nil                                                      ;; vertical border face is similar to background
+                    :foreground "Gray2"
+                    :background "Gray2")
 (set-face-attribute 'default nil                                                              ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
@@ -136,6 +141,7 @@
                                    ("blog" . ?b)                                              ;; related to blogging
                                    ("errands" . ?e)                                           ;; related repeated / one time chores / errands
                                    ("leisure" . ?l)                                           ;; related to casual / reading / enjoyment
+                                   ("μtodays" . ?u)                                           ;; office work for each day
                                    ("vocation" . ?v)))                                        ;; career and life goal
 
              (setq org-hide-leading-stars t
@@ -156,7 +162,7 @@
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
-                   org-agenda-hide-tags-regexp "errands\\|leisure\\|vocation"                 ;; hide these tags in agenda view
+                   org-agenda-hide-tags-regexp "errands\\|leisure\\|vocation\\|μtodays"       ;; hide these tags in agenda view
                    org-agenda-prefix-format '(                                                ;; agenda view display category and filename
                                               (agenda . " %i %?-12t % s")
                                               (todo . " %i %(aporan/agenda-prefix)")
@@ -168,23 +174,30 @@
                    '(("o" "Office View"
                       ((tags "PRIORITY=\"A\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-overriding-header "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻  🐾  High-Priority")))
+                              (org-agenda-overriding-header "🐾  High-Priority")))
                        (tags "PRIORITY=\"B\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-overriding-header "(︺︹︺)  🐾  Next IN Queue ")))
+                              (org-agenda-overriding-header "🐾  Next IN Queue ")))
+                       (tags "μtodays"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-if nil '(scheduled))
+                                    (aporan/org-skip-subtree-if-priority ?A)))
+                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "♉  μTODAYS")))
                        (agenda "" ((org-agenda-span 1)))
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
+                                       (aporan/org-agenda-skip-tag "μtoday")
                                        (org-agenda-skip-if nil '(scheduled deadline))))
-                                 (org-agenda-overriding-header "(╯°□°）╯︵ ┻━┻  🐾  Everything-Else"))))
+                                 (org-agenda-overriding-header "🐾  Everything-Else"))))
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/office"))))
 
                      ("p" "Personal View"
                       ((tags "PRIORITY=\"A\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-overriding-header "﴾͡๏̯͡๏﴿ O'RLY?  🐾  High-Priority")))
+                              (org-agenda-overriding-header "🐾  High-Priority")))
                        (agenda "" ((org-agenda-span 3)))
                        (tags "vocation"
                              ((org-agenda-skip-function
@@ -192,21 +205,21 @@
                                     (org-agenda-skip-if nil '(scheduled))
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "¯\\_(ツ)_/¯  ♉  Vocation")))
+                              (org-agenda-overriding-header "♉  Vocation")))
                        (tags "leisure"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ  🐾  Leisure")))
+                              (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ Leisure")))
                        (tags "errands"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "ᕙ(⇀‸↼‶)ᕗ  🐾  Errands")))
+                              (org-agenda-overriding-header "🐾  Errands")))
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
@@ -216,7 +229,7 @@
                                        (aporan/org-agenda-skip-tag "errands")
                                        (aporan/org-agenda-skip-tag "leisure")
                                        (org-agenda-skip-if nil '(scheduled deadline))))
-                                 (org-agenda-overriding-header "EVERYTHING-ELSE ⮔ (╯°□°）╯︵ ┻━┻"))))
+                                 (org-agenda-overriding-header "🐾 Everything-Else"))))
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
 
              (require 'org-habit))
@@ -256,6 +269,18 @@
 (use-package swiper
              :ensure t
              :bind (("C-s" . swiper)))
+
+(use-package projectile
+             :ensure t
+             :bind ("C-c p" . projectile-command-map)
+             :config
+             (projectile-mode t)
+             (setq projectile-completion-system 'ivy))
+
+(use-package counsel-projectile
+             :ensure t
+             :init
+             (counsel-projectile-mode))
 
 (use-package editorconfig
              :ensure t
@@ -322,7 +347,6 @@
              :init
              (setq cfw:render-line-breaker 'cfw:render-line-breaker-none                     ;; truncate long lines
                    cfw:face-item-separator-color 'unspecified)
-                   
              :config
              (set-face-attribute 'cfw:face-title nil                                         ;; year and month title
                                  :foreground "#f0dfaf"
@@ -381,6 +405,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (try calfw-org calfw magit vue-mode dotenv-mode restclient docker-compose-mode dockerfile-mode ng2-mode markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+    (counsel-projectile try calfw-org calfw magit vue-mode dotenv-mode restclient docker-compose-mode dockerfile-mode ng2-mode markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
 
 (put 'dired-find-alternate-file 'disabled nil)
