@@ -51,6 +51,36 @@
 (eval-when-compile                                                                ;; REQUIRES
   (require 'use-package))                                                                     ;; reduces load time
 
+(use-package ibuffer
+             :ensure t
+             :bind (("C-x C-b" . ibuffer))
+             :init
+             (add-hook 'ibuffer-mode-hook
+                       (lambda ()
+                         (ibuffer-switch-to-saved-filter-groups "default")))
+             :config
+             (setq ibuffer-saved-filter-groups
+                   (quote (("default"
+                            ("dired"
+                             (mode . dired-mode))
+                            ("org"
+                             (name . "^.*org$"))
+                            ("magit"
+                             (mode . magit-mode))
+                            ("shell"
+                             (or
+                              (mode . eshell-mode) (mode . shell-mode)))
+                            ("programming"
+                             (or
+                              (mode . clojure-mode)
+                              (mode . clojurescript-mode)
+                              (mode . python-mode)
+                              (mode . c++-mode)))
+                            ("emacs"
+                             (or
+                              (name . "^\\*scratch\\*$")
+                              (name . "^\\*Messages\\*$"))))))))
+
 (use-package bind-key
              :ensure t)
 
@@ -264,7 +294,8 @@
                     ("C-x C-f" . counsel-find-file)
                     ("C-c g" . counsel-git)
                     ("C-c r" . counsel-git-grep)
-                    ("C-c l" . counsel-locate)))
+                    ("C-c l" . counsel-locate)
+                    ("C-'" . counsel-linux-app)))
 
 (use-package swiper
              :ensure t
@@ -309,7 +340,6 @@
              :ensure t)
 
 (use-package dart-mode
-            :disabled
             :init
             (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
 
