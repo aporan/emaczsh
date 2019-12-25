@@ -5,6 +5,13 @@
 
 (package-initialize)                                                                          ;; load packages explicitly in the init file
 
+(setq                                                                             ;; SET back-ups
+ backup-directory-alist `(("." . "~/.emacs-saves"))
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+ version-control t)
+
 (setq                                                                             ;; SET default global variables
                                                                                         ;; visual
  package-enable-at-startup nil                                                                ;; disable package loading after the init file
@@ -14,6 +21,7 @@
  ansi-color-faces-vector [default default default italic underline success warning error])
 
 (setq-default                                                                     ;; SET default local variables set globally
+ fill-column 90                                                                               ;; wrap columns higher than this
  indent-tabs-mode nil                                                                         ;; uses spaces instead of tabs
  tab-width 4                                                                                  ;; tab display character width in columns
  truncate-lines t                                                                             ;; prevent texts from bleeding over the edge
@@ -65,7 +73,7 @@
              (defun aporan/org-skip-subtree-if-priority (priority)                            ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                "Skip an agenda subtree if it has a priority of PRIORITY.
 
-                PRIORITY may be one of the characters ?A, ?B, or ?C."
+                PRIORITY may be one of the characters ?A, ?B, ?C, or ?D."
                (let ((subtree-end (save-excursion (org-end-of-subtree t)))
                      (pri-value (* 1000 (- org-lowest-priority priority)))
                      (pri-current (org-get-priority (thing-at-point 'line t))))
@@ -146,10 +154,10 @@
 
              (setq org-hide-leading-stars t
                    org-enforce-todo-dependencies t                                            ;; enforce children dependencies on parents for todo's
-                   org-lowest-priority 68                                                     ;; change lowest priority number to extend priority values
+                   org-lowest-priority 69                                                     ;; change lowest priority number to extend priority values
                    org-deadline-warning-days 7                                                ;; change early warning days
-                   org-default-priority ?D                                                    ;; change default priority
-                   org-refile-targets '((org-agenda-files :level . 1))                        ;; refile to all available agenda files
+                   org-default-priority ?E                                                    ;; change default priority
+                   org-refile-targets '((org-agenda-files :level . 2))                        ;; refile to all available agenda files
                    org-refile-use-outline-path 'file                                          ;; refile using filenames as top level
                    org-refile-allow-creating-parent-nodes 'confirm                            ;; prompt when creating top level refiles
                    org-outline-path-complete-in-steps nil                                     ;; use ivy to select names instead of stepping through
@@ -162,7 +170,7 @@
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
-                   org-agenda-hide-tags-regexp "errands\\|leisure\\|vocation\\|μtodays"       ;; hide these tags in agenda view
+                   org-agenda-hide-tags-regexp "errands\\|leisure\\|academia\\|vocation\\|μtodays" ;; hide these tags in agenda view
                    org-agenda-prefix-format '(                                                ;; agenda view display category and filename
                                               (agenda . " %i %?-12t % s")
                                               (todo . " %i %(aporan/agenda-prefix)")
@@ -171,34 +179,19 @@
 
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
-                   '(("o" "Office View"
+                   '(("p" "Personal View"
                       ((tags "PRIORITY=\"A\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-overriding-header "🐾  High-Priority")))
-                       (tags "PRIORITY=\"B\""
-                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-overriding-header "🐾  Next IN Queue ")))
-                       (tags "μtodays"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "♉  μTODAYS")))
-                       (agenda "" ((org-agenda-span 1)))
-                       (alltodo ""
-                                ((org-agenda-skip-function
-                                  '(or (aporan/org-skip-subtree-if-priority ?A)
-                                       (aporan/org-skip-subtree-if-priority ?B)
-                                       (aporan/org-agenda-skip-tag "μtoday")
-                                       (org-agenda-skip-if nil '(scheduled deadline))))
-                                 (org-agenda-overriding-header "🐾  Everything-Else"))))
-                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office"))))
-
-                     ("p" "Personal View"
-                      ((tags "PRIORITY=\"A\""
-                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-overriding-header "🐾  High-Priority")))
+                              (org-agenda-overriding-header "⇈ High-Priority")))
                        (agenda "" ((org-agenda-span 3)))
+                       (tags "academia"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)
+                                    (aporan/org-skip-subtree-if-priority ?A)))
+                              (org-agenda-prefix-format '((tags . " %b %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "🐾 Learning Topics")))
                        (tags "vocation"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
@@ -219,11 +212,12 @@
                                     (org-agenda-skip-if nil '(scheduled))
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "🐾  Errands")))
+                              (org-agenda-overriding-header "🐾 Errands")))
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
+                                       (aporan/org-agenda-skip-tag "academia")
                                        (aporan/org-agenda-skip-tag "vocation")
                                        (aporan/org-agenda-skip-tag "leisure")
                                        (aporan/org-agenda-skip-tag "errands")
@@ -233,6 +227,10 @@
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
 
              (require 'org-habit))
+
+(use-package org-sidebar
+            :ensure t
+            :bind (("C-c s" . org-sidebar)))
 
 (use-package adaptive-wrap
              :ensure t
@@ -305,13 +303,69 @@
 (use-package vue-mode
              :ensure t)
 
+(use-package password-store
+             :ensure t
+             :config
+             (setq auth-source-pass-filename "~/Gitlab/password-manager"))
+
+(use-package ivy-pass
+             :after password-store
+             :ensure t)
+
 (use-package magit
              :ensure t)
+
+(use-package forge
+             :after magit
+             :ensure t
+             :config
+             (add-to-list 'forge-alist '("gitlab.usec.io" "gitlab.usec.io:8888/api/v4" "www.usec.io" forge-gitlab-repository)))
 
 (use-package dart-mode
             :disabled
             :init
             (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
+
+(use-package flycheck
+            :ensure t
+            :hook (python-mode . flycheck-mode)
+            :config
+            (add-to-list 'flycheck-checkers 'python-pyflakes)
+            (add-to-list 'flycheck-disabled-checkers 'python-flake8)
+            (add-to-list 'flycheck-disabled-checkers 'python-pylint)
+
+            (use-package flycheck-pyflakes
+                        :after flycheck
+                        :ensure t
+                        :config
+                        (setq flycheck-python-pyflakes-executable "pyflakes3"))
+
+            (use-package flycheck-color-mode-line
+                        :after flycheck
+                        :ensure t
+                        :hook (flycheck-mode . flycheck-color-mode-line-mode))
+
+            (use-package flycheck-inline
+                        :after flycheck
+                        :ensure t
+                        :hook (flycheck-mode . flycheck-inline-mode)))
+
+(use-package dired
+            :ensure nil                                                                       ;; non-existent package in package.el (dired is default)
+            :hook (dired-mode . dired-hide-details-mode)
+            :config
+            (use-package diredfl
+                        :ensure t
+                        :config
+                        (diredfl-global-mode 1))
+
+            (use-package dired-git-info
+                        :ensure t
+                        :bind (:map dired-mode-map
+                                    (")" . dired-git-info-mode))))
+
+(use-package flymake
+            :disabled)
 
 ;; enable when configurations are understood
 (use-package eyebrowse
@@ -322,7 +376,7 @@
              :hook ((prog-mode . whitespace-mode)
                     (org-mode . whitespace-mode))
              :init
-             (setq whitespace-line-column 80
+             (setq whitespace-line-column 90
                    whitespace-style '(face lines-tail)
                    show-trailing-whitespace t)
              :config
@@ -403,8 +457,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
  '(package-selected-packages
    (quote
-    (counsel-projectile try calfw-org calfw magit vue-mode dotenv-mode restclient docker-compose-mode dockerfile-mode ng2-mode markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+    (olivetti ivy-pass diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit vue-mode dotenv-mode restclient docker-compose-mode dockerfile-mode ng2-mode markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
 
 (put 'dired-find-alternate-file 'disabled nil)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
