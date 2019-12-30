@@ -21,7 +21,7 @@
  ansi-color-faces-vector [default default default italic underline success warning error])
 
 (setq-default                                                                     ;; SET default local variables set globally
- fill-column 90                                                                               ;; wrap columns higher than this
+ fill-column 78                                                                               ;; wrap columns higher than this
  indent-tabs-mode nil                                                                         ;; uses spaces instead of tabs
  tab-width 4                                                                                  ;; tab display character width in columns
  truncate-lines t                                                                             ;; prevent texts from bleeding over the edge
@@ -98,7 +98,8 @@
              :bind (("C-c a" . org-agenda)                                                    ;; org agenda
                     ("C-c c" . org-capture)                                                   ;; org capture
                     ("C-c i" . org-set-tags-command))                                         ;; org insert tags
-             :hook (org-mode . visual-line-mode)
+             :hook ((org-mode . auto-fill-mode)
+                    (org-mode . darkroom-tentative-mode))
              :config
              (defun aporan/org-skip-subtree-if-priority (priority)                            ;; REFER: https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
                "Skip an agenda subtree if it has a priority of PRIORITY.
@@ -147,8 +148,7 @@
                           '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
 
 
-             (setq visual-line-mode t                                                         ;; use visual line mode in org
-                   org-src-fontify-natively t)                                                ;; syntax highlighting for code block
+             (setq org-src-fontify-natively t)                                                ;; syntax highlighting for code block
 
              (setq org-capture-templates
                    '(
@@ -260,7 +260,9 @@
 
 (use-package org-sidebar
             :ensure t
-            :bind (("C-c s" . org-sidebar)))
+            :bind (:map org-mode-map
+                        ("C-c b" . org-sidebar)
+                        ("C-c C-b" . org-sidebar-tree-toggle)))
 
 (use-package adaptive-wrap
              :ensure t
@@ -289,7 +291,7 @@
 (use-package counsel
              :ensure t
              :bind (("M-x" . counsel-M-x)
-                    ("C-x C-f" . counsel-find-file)
+                    ("C-c C-f" . counsel-find-file)
                     ("C-c g" . counsel-git)
                     ("C-c r" . counsel-git-grep)
                     ("C-c l" . counsel-locate)
@@ -394,6 +396,12 @@
                         :bind (:map dired-mode-map
                                     (")" . dired-git-info-mode))))
 
+(use-package darkroom
+            :ensure t
+            :config
+            (setq darkroom-text-scale-increase 1))
+
+
 (use-package flymake
             :disabled)
 
@@ -427,7 +435,7 @@
 (use-package calfw-org
              :ensure t
              :after (calfw)
-             :bind (("C-c o" . cfw:open-org-calendar))
+             :bind (("C-c t" . cfw:open-org-calendar))
              :init
              (setq cfw:render-line-breaker 'cfw:render-line-breaker-none                     ;; truncate long lines
                    cfw:face-item-separator-color 'unspecified)
@@ -492,7 +500,7 @@
     ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
  '(package-selected-packages
    (quote
-    (olivetti ivy-pass diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit vue-mode dotenv-mode restclient docker-compose-mode dockerfile-mode ng2-mode markdown-mode dart-mode eyebrowse editorconfig counsel ripgrep multiple-cursors adaptive-wrap use-package))))
+    (darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti ivy-pass diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package))))
 
 (put 'dired-find-alternate-file 'disabled nil)
 (custom-set-faces
