@@ -6,7 +6,7 @@
 (package-initialize)                                                                          ;; load packages explicitly in the init file
 
 (setq                                                                             ;; SET back-ups
- backup-directory-alist `(("." . "~/.emacs-saves"))
+ backup-directory-alist '(("." . "~/.emacs-saves"))
  delete-old-versions t
  kept-new-versions 6
  kept-old-versions 2
@@ -278,6 +278,14 @@
 (use-package ripgrep
              :ensure t)
 
+(use-package which-key
+             :ensure t
+             :init
+             (setq which-key-idle-delay 0.1)
+             (which-key-mode)
+             :config
+             (which-key-show-major-mode))
+
 (use-package ivy
              :ensure t
              :bind (("C-c C-s" . ivy-resume)
@@ -336,15 +344,6 @@
 (use-package vue-mode
              :ensure t)
 
-(use-package password-store
-             :ensure t
-             :config
-             (setq auth-source-pass-filename "~/Gitlab/password-manager"))
-
-(use-package ivy-pass
-             :after password-store
-             :ensure t)
-
 (use-package magit
              :ensure t)
 
@@ -358,9 +357,16 @@
             :init
             (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
 
+(use-package company
+            :ensure t
+            :defer t
+            :diminish company-mode
+            :hook (ledger-mode . company-mode))
+
 (use-package flycheck
             :ensure t
-            :hook (python-mode . flycheck-mode)
+            :hook ((python-mode . flycheck-mode)
+                   (ledger-mode . flycheck-mode))
             :config
             (add-to-list 'flycheck-checkers 'python-pyflakes)
             (add-to-list 'flycheck-disabled-checkers 'python-flake8)
@@ -380,7 +386,11 @@
             (use-package flycheck-inline
                         :after flycheck
                         :ensure t
-                        :hook (flycheck-mode . flycheck-inline-mode)))
+                        :hook (flycheck-mode . flycheck-inline-mode))
+
+            (use-package flycheck-ledger
+                        :after flycheck
+                        :ensure t))
 
 (use-package dired
             :ensure nil                                                                       ;; non-existent package in package.el (dired is default)
@@ -395,19 +405,80 @@
                         :ensure t
                         :bind (:map dired-mode-map
                                     (")" . dired-git-info-mode))))
+(use-package ledger-mode
+            :ensure t
+            :mode "\\.journal\\'"
+            :hook (ledger-mode . auto-revert-tail-mode)
+            :config
+            (setq ledger-binary-path "hledger"                                                ;; use hledger backend instead of ledger
+                  ledger-report-links-in-register nil                                         ;; disables ledger checks
+                  ledger-mode-should-check-version nil
+                  ledger-accounts-file "~/Gitlab/ppocket/accounts.journal")
+
+            (setq ledger-post-amount-alignment-column 64                                      ;; move default amount position right allowing longer account names
+                  ledger-highlight-xact-under-point nil)                                      ;; disable highlighting of transactions
+
+            (setq ledger-report-auto-width nil                                                ;; enables to use hledger reports
+                  ledger-report-use-native-highlighting nil)                                  ;; https://github.com/simonmichael/hledger/issues/367#issuecomment-433678314
+
+            (defun highlight-negative-amounts nil                                             ;; useful when running reports in a shell buffer
+              (interactive)
+              (highlight-regexp "\\(\\$-\\|-\\$\\)[.,0-9]+" (quote hi-red-b)))
+
+            (defvar aporan/ledger-report-monthly-expenses
+              (list "monthly-expenses"
+                    (concat "%(binary)"                                                       ;; https://unconj.ca/blog/using-hledger-with-ledger-mode.html
+                            "-f %(ledger-file) bal expenses "
+                            "--tree --no-total --row-total --average --monthly --pretty-tables"))
+              "Custom configuration to provide monthly expenses. The idea is originally taken
+from https://unconj.ca/blog/using-hledger-with-ledger-mode.html"
+              )
+
+            (add-to-list 'ledger-reports aporan/ledger-report-monthly-expenses))
+
+(use-package flymake
+            :disabled)
+
+;; start visual
+(use-package eyebrowse
+             :disabled)
 
 (use-package darkroom
             :ensure t
             :config
             (setq darkroom-text-scale-increase 1))
 
+(use-package telephone-line
+             :ensure t
+             :config
+             (setq telephone-line-lhs
+                     '((accent . (telephone-line-buffer-modified-segment))
+                       (nil . (telephone-line-vc-segment))
+                       (accent . (telephone-line-projectile-segment))
+                       (nil . (telephone-line-buffer-name-segment
+                               telephone-line-filesize-segment
+                               telephone-line-atom-encoding-segment))))
+             (setq telephone-line-rhs
+                     '((nil    . (telephone-line-narrow-segment
+                                  telephone-line-flycheck-segment
+                                  telephone-line-process-segment))
+                       (accent . (telephone-line-major-mode-segment))
+                       (nil    . (telephone-line-position-segment
+                                  telephone-line-hud-segment))))
+             (telephone-line-mode t))
 
-(use-package flymake
-            :disabled)
+(use-package rainbow-delimiters
+             :ensure t
+             :hook ((prog-mode . rainbow-delimiters-mode)
+                    (text-mode . rainbow-delimiters-mode)))
 
-;; enable when configurations are understood
-(use-package eyebrowse
-             :disabled)
+(use-package dimmer
+             :ensure t
+             :init
+             (dimmer-mode t)
+             :config
+             (setq dimmer-fraction 0.4)
+             (dimmer-configure-which-key))
 
 (use-package whitespace
              :ensure t
@@ -421,6 +492,7 @@
              (set-face-attribute 'whitespace-line nil
                                  :foreground "SlateGray3"
                                  :background 'unspecified))
+;; end visual
 
 (use-package markdown-mode
              :ensure t
@@ -500,7 +572,8 @@
     ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
  '(package-selected-packages
    (quote
-    (darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti ivy-pass diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package))))
+    (telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+ '(paradox-github-token t))
 
 (put 'dired-find-alternate-file 'disabled nil)
 (custom-set-faces
