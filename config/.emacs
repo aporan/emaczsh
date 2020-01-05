@@ -419,7 +419,7 @@
                   ledger-highlight-xact-under-point nil)                                      ;; disable highlighting of transactions
 
             (setq ledger-report-auto-width nil                                                ;; enables to use hledger reports
-                  ledger-report-use-native-highlighting nil)                                  ;; https://github.com/simonmichael/hledger/issues/367#issuecomment-433678314
+                  ledger-report-use-native-highlighting nil)                                  ;; REFER: https://github.com/simonmichael/hledger/issues/367#issuecomment-433678314
 
             (defun highlight-negative-amounts nil                                             ;; useful when running reports in a shell buffer
               (interactive)
@@ -427,7 +427,7 @@
 
             (defvar aporan/ledger-report-monthly-expenses
               (list "monthly-expenses"
-                    (concat "%(binary)"                                                       ;; https://unconj.ca/blog/using-hledger-with-ledger-mode.html
+                    (concat "%(binary)"                                                       ;; REFER: https://unconj.ca/blog/using-hledger-with-ledger-mode.html
                             "-f %(ledger-file) bal expenses "
                             "--tree --no-total --row-total --average --monthly --pretty-tables"))
               "Custom configuration to provide monthly expenses. The idea is originally taken
@@ -439,9 +439,8 @@ from https://unconj.ca/blog/using-hledger-with-ledger-mode.html"
 (use-package flymake
             :disabled)
 
-;; start visual
-(use-package eyebrowse
-             :disabled)
+(use-package eyebrowse                                                            ;; VISUAL packages
+             :disabled)                                                                 ;; start
 
 (use-package darkroom
             :ensure t
@@ -491,8 +490,8 @@ from https://unconj.ca/blog/using-hledger-with-ledger-mode.html"
              :config
              (set-face-attribute 'whitespace-line nil
                                  :foreground "SlateGray3"
-                                 :background 'unspecified))
-;; end visual
+                                 :background 'unspecified))                       ;; VISUAL packages
+                                                                                        ;; end
 
 (use-package markdown-mode
              :ensure t
