@@ -425,16 +425,77 @@
               (interactive)
               (highlight-regexp "\\(\\$-\\|-\\$\\)[.,0-9]+" (quote hi-red-b)))
 
-            (defvar aporan/ledger-report-monthly-expenses
-              (list "monthly-expenses"
-                    (concat "%(binary)"                                                       ;; REFER: https://unconj.ca/blog/using-hledger-with-ledger-mode.html
+            (defvar aporan/ledger-report-daily-expenses
+              (list "day-expenses"
+                    (concat "%(binary) "                                                       ;; REFER: https://unconj.ca/blog/using-hledger-with-ledger-mode.html
                             "-f %(ledger-file) bal expenses "
-                            "--tree --no-total --row-total --average --monthly --pretty-tables"))
-              "Custom configuration to provide monthly expenses. The idea is originally taken
-from https://unconj.ca/blog/using-hledger-with-ledger-mode.html"
-              )
+                            "--tree --average --row-total -ED --pretty-tables -p 'this week'")))
 
-            (add-to-list 'ledger-reports aporan/ledger-report-monthly-expenses))
+            (defvar aporan/ledger-report-weekly-expenses
+              (list "wk-expenses"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) bal expenses "
+                            "--tree --average --row-total -EW --pretty-tables -p 'this year'")))
+
+            (defvar aporan/ledger-report-monthly-expenses
+              (list "mnth-expenses"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) bal expenses "
+                            "--tree --no-total --row-total --average -M --pretty-tables")))
+
+            (defvar aporan/ledger-report-balance-sheet-cost
+              (list "balance-sheet-cost"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) bse -B "
+                            "--flat -M --pretty-tables")))
+
+            (defvar aporan/ledger-report-net-account-balance
+              (list "net-account-balance"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) bal -BAE "
+                            "--tree -M --pretty-tables")))
+
+            (defvar aporan/ledger-report-curr-month-budget                                   ;; budget functions
+              (list "mnth-budget"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
+                            "--budget -ME cur:SGD --pretty-tables")))
+
+            (defvar aporan/ledger-report-curr-month-budget-transpose
+              (list "mnth-budget-transpose"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
+                            "--budget -M cur:SGD --pretty-tables --transpose")))
+
+            (defvar aporan/ledger-report-budget-forecast
+              (list "budget-forecast"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
+                            "--budget --forecast -ME cur:SGD --pretty-tables")))
+
+            (defvar aporan/ledger-report-env-budget-forecast
+              (list "env-budget-forecast"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
+                            "--budget --cumulative --forecast -ME --depth 2 cur:SGD --pretty-tables")))
+
+            (defvar aporan/ledger-report-quarterly-forecast
+              (list "qtr-forecast"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
+                            "--budget --cumulative --forecast -p 'every 3 months' --depth 1 cur:SGD --pretty-tables")))
+
+            (add-to-list 'ledger-reports aporan/ledger-report-daily-expenses)
+            (add-to-list 'ledger-reports aporan/ledger-report-weekly-expenses)
+            (add-to-list 'ledger-reports aporan/ledger-report-monthly-expenses)
+            (add-to-list 'ledger-reports aporan/ledger-report-net-account-balance)
+            (add-to-list 'ledger-reports aporan/ledger-report-balance-sheet-cost)
+            (add-to-list 'ledger-reports aporan/ledger-report-curr-month-budget)
+            (add-to-list 'ledger-reports aporan/ledger-report-curr-month-budget-transpose)
+            (add-to-list 'ledger-reports aporan/ledger-report-budget-forecast)
+            (add-to-list 'ledger-reports aporan/ledger-report-env-budget-forecast)
+            (add-to-list 'ledger-reports aporan/ledger-report-quarterly-forecast))
+
 
 (use-package flymake
             :disabled)
