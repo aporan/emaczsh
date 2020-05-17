@@ -33,7 +33,6 @@
 (global-auto-revert-mode t)                                                                   ;; auto load buffer after file is changed
 (put 'narrow-to-region 'disabled nil)                                                         ;; allow narrow to region
                                                                                         ;; visual
-(load-theme 'tango-dark t)                                                                    ;; load built-in theme
 (fringe-mode 3)                                                                               ;; fringe border is now half-width on either side
 (menu-bar-mode -1)                                                                            ;; remove menu bar from display
 (tool-bar-mode -1)                                                                            ;; remove tool bar from display
@@ -58,6 +57,12 @@
 
 (eval-when-compile                                                                ;; REQUIRES
   (require 'use-package))                                                                     ;; reduces load time
+
+(use-package color-theme-modern
+             :ensure t
+             :init
+             (load-theme 'cobalt t t)
+             (enable-theme 'cobalt))
 
 (use-package ibuffer
              :ensure t
@@ -431,11 +436,17 @@
                             "-f %(ledger-file) bal expenses "
                             "--tree --average --row-total -ED --pretty-tables -p 'this week'")))
 
-            (defvar aporan/ledger-report-weekly-expenses
-              (list "wk-expenses"
+            (defvar aporan/ledger-report-month-weekly-expenses
+              (list "mnth-wk-expenses"
                     (concat "%(binary) "
                             "-f %(ledger-file) bal expenses "
-                            "--tree --average --row-total -EW --pretty-tables -p 'this year'")))
+                            "--tree --average --row-total -EW --pretty-tables -p 'this month'")))
+
+            (defvar aporan/ledger-report-year-weekly-expenses
+              (list "year-wk-expenses"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) bal expenses "
+                            "--tree --average --row-total -EW --pretty-tables -p 'this year to today'")))
 
             (defvar aporan/ledger-report-monthly-expenses
               (list "mnth-expenses"
@@ -486,7 +497,8 @@
                             "--budget --cumulative --forecast -p 'every 3 months' --depth 1 cur:SGD --pretty-tables")))
 
             (add-to-list 'ledger-reports aporan/ledger-report-daily-expenses)
-            (add-to-list 'ledger-reports aporan/ledger-report-weekly-expenses)
+            (add-to-list 'ledger-reports aporan/ledger-report-year-weekly-expenses)
+            (add-to-list 'ledger-reports aporan/ledger-report-month-weekly-expenses)
             (add-to-list 'ledger-reports aporan/ledger-report-monthly-expenses)
             (add-to-list 'ledger-reports aporan/ledger-report-net-account-balance)
             (add-to-list 'ledger-reports aporan/ledger-report-balance-sheet-cost)
@@ -543,21 +555,39 @@
 (use-package whitespace
              :ensure t
              :hook ((prog-mode . whitespace-mode)
+                    (ng2-html-mode . whitespace-mode)
+                    (yaml-mode . whitespace-mode)
+                    (docker-compose-mode . whitespace-mode)
                     (org-mode . whitespace-mode))
              :init
              (setq whitespace-line-column 90
-                   whitespace-style '(face lines-tail)
-                   show-trailing-whitespace t)
+                   whitespace-style '(face indentation::tab empty)
+                   show-trailing-whitespace t
+                   whitespace-display-mappings
+                   '(
+                     (space-mark 32 [183] [46])
+                     (newline-mark 10 [36 10])
+                     (tab-mark 9 [187 9] [92 9])
+                     ))
              :config
              (set-face-attribute 'whitespace-line nil
                                  :foreground "SlateGray3"
-                                 :background 'unspecified))                       ;; VISUAL packages
+                                 :background 'unspecified)
+
+             (set-face-attribute 'whitespace-empty nil
+                                 :foreground nil
+                                 :background "firebrick")
+
+             (set-face-attribute 'whitespace-indentation nil
+                                 :foreground nil
+                                 :background "#0d2d4d"))                       ;; VISUAL packages
                                                                                         ;; end
 
 (use-package markdown-mode
              :ensure t
              :commands (markdown-mode gfm-mode)
              :mode  (("\\.md\\'" . gfm-mode))
+             :hook (gfm-mode . auto-fill-mode)
              :init
              (setq markdown-command "multimarkdown"))
 
@@ -632,8 +662,9 @@
     ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
  '(package-selected-packages
    (quote
-    (telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+    (color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
  '(paradox-github-token t))
+
 
 (put 'dired-find-alternate-file 'disabled nil)
 (custom-set-faces
