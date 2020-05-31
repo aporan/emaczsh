@@ -214,7 +214,21 @@
 
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
-                   '(("p" "Personal View"
+                   '(("o" "Office View"
+                      ((tags "PRIORITY=\"A\""
+                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                              (org-agenda-overriding-header "⇈ High-Priority")))
+
+                       (alltodo ""
+                                ((org-agenda-skip-function
+                                  '(or (aporan/org-skip-subtree-if-priority ?A)
+                                       (org-agenda-skip-if nil '(scheduled deadline))))
+                                 (org-agenda-overriding-header "🐾 TODOs")))
+
+                       (agenda "" ((org-agenda-span 5))))
+                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-job.org"))))
+
+                     ("p" "Personal View"
                       ((tags "PRIORITY=\"A\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                               (org-agenda-overriding-header "⇈ High-Priority")))
@@ -525,18 +539,17 @@
              :config
              (setq telephone-line-lhs
                      '((accent . (telephone-line-buffer-modified-segment))
-                       (nil . (telephone-line-vc-segment))
+                       (nil . (telephone-line-atom-encoding-segment))
                        (accent . (telephone-line-projectile-segment))
-                       (nil . (telephone-line-buffer-name-segment
-                               telephone-line-filesize-segment
-                               telephone-line-atom-encoding-segment))))
+                       (nil . (telephone-line-buffer-name-segment))
+                       (accent . (telephone-line-position-segment))
+                       (nil . (telephone-line-filesize-segment))
+                       (accent . (telephone-line-vc-segment))))
              (setq telephone-line-rhs
                      '((nil    . (telephone-line-narrow-segment
                                   telephone-line-flycheck-segment
                                   telephone-line-process-segment))
-                       (accent . (telephone-line-major-mode-segment))
-                       (nil    . (telephone-line-position-segment
-                                  telephone-line-hud-segment))))
+                       (accent . (telephone-line-major-mode-segment))))
              (telephone-line-mode t))
 
 (use-package rainbow-delimiters
@@ -582,6 +595,9 @@
                                  :foreground nil
                                  :background "#0d2d4d"))                       ;; VISUAL packages
                                                                                         ;; end
+
+(use-package yaml-mode
+             :ensure t)
 
 (use-package markdown-mode
              :ensure t
