@@ -144,14 +144,12 @@
                        (while (> level 2)
                          (setq level (1- level)
                                str (concat str " ")))
-                       (concat str "  ↯ "))
+                       (concat str "↯ "))
                    (let ((str ""))
                      (concat str "↬ ")))))
 
-
              (add-to-list 'org-structure-template-alist                                       ;; add blog easy template for .org files
                           '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
-
 
              (setq org-src-fontify-natively t)                                                ;; syntax highlighting for code block
 
@@ -173,7 +171,7 @@
              (setq org-todo-keywords
                    '((sequence
                       "TODO(t)"                                                               ;; tasks which needs to be done
-                      "UPCOMING(u)"                                                           ;; tasks with schedule / deadlines
+                      "NEXT(n)"                                                               ;; tasks which are next in Q
                       "WAITING(w@)"                                                           ;; waiting for someone / something
                       "IN-PROGRESS(p)" "|"                                                    ;; tasks which are under way
                       "DONE(d!)"                                                              ;; completed tasks
@@ -184,8 +182,8 @@
                                    ("blog" . ?b)                                              ;; related to blogging
                                    ("errands" . ?e)                                           ;; related repeated / one time chores / errands
                                    ("leisure" . ?l)                                           ;; related to casual / reading / enjoyment
-                                   ("μtodays" . ?u)                                           ;; office work for each day
-                                   ("vocation" . ?v)))                                        ;; career and life goal
+                                   ("traverse" . ?t)                                          ;; career and life goal
+                                   ("cuppa" . ?c)))                                           ;; fun things to do which maybe bumped up to traverse
 
              (setq org-hide-leading-stars t
                    org-enforce-todo-dependencies t                                            ;; enforce children dependencies on parents for todo's
@@ -205,7 +203,7 @@
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
-                   org-agenda-hide-tags-regexp "errands\\|leisure\\|academia\\|vocation\\|μtodays" ;; hide these tags in agenda view
+                   org-agenda-hide-tags-regexp "errands\\|leisure\\|academia\\|cuppa\\|traverse" ;; hide these tags in agenda view
                    org-agenda-prefix-format '(                                                ;; agenda view display category and filename
                                               (agenda . " %i %?-12t % s")
                                               (todo . " %i %(aporan/agenda-prefix)")
@@ -215,31 +213,60 @@
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
                    '(("o" "Office View"
-                      ((tags "PRIORITY=\"A\""
+                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "⇈ High-Priority")))
-
+                       (tags "traverse"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
+                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "⊶ Route53B")))
+                       (tags "unplanned"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)
+                                    (aporan/org-skip-subtree-if-priority ?B)
+                                    (aporan/org-skip-subtree-if-priority ?A)))
+                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "Unplanned ┐")))
+                       (agenda "" ((org-agenda-span 5)))
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
+                                       (aporan/org-skip-subtree-if-priority ?B)
+                                       (aporan/org-agenda-skip-tag "traverse")
                                        (org-agenda-skip-if nil '(scheduled deadline))))
-                                 (org-agenda-overriding-header "🐾 TODOs")))
+                                 (org-agenda-overriding-header "🐾 Backlog"))))
 
-                       (agenda "" ((org-agenda-span 5))))
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-job.org"))))
 
                      ("p" "Personal View"
                       ((tags "PRIORITY=\"A\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "⇈ High-Priority")))
                        (agenda "" ((org-agenda-span 3)))
+                       (tags "traverse"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)
+                                    (aporan/org-skip-subtree-if-priority ?A)))
+                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "⊶ Route53A")))
                        (tags "academia"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))
                                     (org-agenda-skip-entry-if 'nottodo 'todo)
                                     (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . " %b %(aporan/agenda-prefix)")))
+                              (org-agenda-prefix-format '((tags . "  %b %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "🐾 Learning Topics")))
                        (tags "vocation"
                              ((org-agenda-skip-function
@@ -247,7 +274,7 @@
                                     (org-agenda-skip-if nil '(scheduled))
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "♉  Vocation")))
+                              (org-agenda-overriding-header "♉ Cup-of-Tea")))
                        (tags "leisure"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
@@ -266,6 +293,7 @@
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
+                                       (aporan/org-agenda-skip-tag "traverse")
                                        (aporan/org-agenda-skip-tag "academia")
                                        (aporan/org-agenda-skip-tag "vocation")
                                        (aporan/org-agenda-skip-tag "leisure")
