@@ -152,6 +152,7 @@
                           '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
 
              (setq org-src-fontify-natively t)                                                ;; syntax highlighting for code block
+             (setq org-image-actual-width nil)
 
              (setq org-capture-templates
                    '(
@@ -173,10 +174,11 @@
                       "TODO(t)"                                                               ;; tasks which needs to be done
                       "NEXT(n)"                                                               ;; tasks which are next in Q
                       "WAITING(w@)"                                                           ;; waiting for someone / something
+                      "ALLOT(a@)"                                                             ;; work which is delegated
                       "IN-PROGRESS(p)" "|"                                                    ;; tasks which are under way
                       "DONE(d!)"                                                              ;; completed tasks
-                      "CANCELLED(c@)"                                                         ;; tasks which are no longer relevant
-                      "ASSIGNED(a@)")))                                                       ;; delegated items to someone
+                      "CANCELLED(c@)")))                                                      ;; tasks which are no longer relevant
+
 
              (setq org-tag-alist '(("academia" . ?a)                                          ;; categorize header tag list
                                    ("blog" . ?b)                                              ;; related to blogging
@@ -184,7 +186,6 @@
                                    ("leisure" . ?l)                                           ;; related to casual / reading / enjoyment
                                    ("traverse" . ?t)                                          ;; career and life goal
                                    ("cuppa" . ?c)))                                           ;; fun things to do which maybe bumped up to traverse
-
              (setq org-hide-leading-stars t
                    org-enforce-todo-dependencies t                                            ;; enforce children dependencies on parents for todo's
                    org-lowest-priority 69                                                     ;; change lowest priority number to extend priority values
@@ -382,6 +383,9 @@
 (use-package docker-compose-mode
              :ensure t)
 
+(use-package puppet-mode
+             :ensure t)
+
 (use-package restclient
              :ensure t)
 
@@ -391,14 +395,33 @@
 (use-package vue-mode
              :ensure t)
 
+(use-package hl-todo
+             :ensure t)
+
 (use-package magit
              :ensure t)
 
 (use-package forge
+             :disabled)
+             ;; :after magit
+             ;; :ensure t
+             ;; :config
+             ;; (add-to-list 'forge-alist '("gitlab.usec.io" "gitlab.usec.io:8888/api/v4" "www.usec.io" forge-gitlab-repository)))
+
+
+(use-package magit-todos
              :after magit
              :ensure t
+             :commands (magit-todos-mode)
+             :hook (magit-mode . magit-todos-mode)
              :config
-             (add-to-list 'forge-alist '("gitlab.usec.io" "gitlab.usec.io:8888/api/v4" "www.usec.io" forge-gitlab-repository)))
+             (setq magit-todos-recursive t
+                   magit-todos-depth 100)
+             (custom-set-variables
+              '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))))
+
+(use-package python-mode
+            :ensure t)
 
 (use-package dart-mode
             :init
@@ -631,7 +654,8 @@
              :ensure t
              :commands (markdown-mode gfm-mode)
              :mode  (("\\.md\\'" . gfm-mode))
-             :hook (gfm-mode . auto-fill-mode)
+             :hook ((markdown-mode . auto-fill-mode)
+                    (gfm-mode . auto-fill-mode))
              :init
              (setq markdown-command "multimarkdown"))
 
@@ -704,9 +728,10 @@
  '(custom-safe-themes
    (quote
     ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
+ '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
  '(package-selected-packages
    (quote
-    (color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+    (color-theme-modern python-mode puppet-mode hl-todo magit-todos telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
  '(paradox-github-token t))
 
 
