@@ -10,6 +10,7 @@
  delete-old-versions t
  kept-new-versions 6
  kept-old-versions 2
+ vc-handled-backends nil                                                                      ;; don't use emacs builtin versioning system
  version-control t)
 
 (setq                                                                             ;; SET default global variables
@@ -218,15 +219,6 @@
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                               (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "⇈ High-Priority")))
-                       (tags "traverse"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
-                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "⊶ Route53B")))
                        (tags "unplanned"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
@@ -237,11 +229,23 @@
                               (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "Unplanned ┐")))
                        (agenda "" ((org-agenda-span 5)))
+                       (tags "traverse"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)
+                                    ;; (org-agenda-skip-entry-if 'nottodo '("ASSIGNED"))
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
+                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "⊶ Route53B")))
+
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
                                        (aporan/org-agenda-skip-tag "traverse")
+                                       (aporan/org-agenda-skip-tag "unplanned")
                                        (org-agenda-skip-if nil '(scheduled deadline))))
                                  (org-agenda-overriding-header "🐾 Backlog"))))
 
