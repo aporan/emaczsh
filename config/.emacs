@@ -205,7 +205,7 @@
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
-                   org-agenda-hide-tags-regexp "errands\\|leisure\\|academia\\|cuppa\\|traverse" ;; hide these tags in agenda view
+                   org-agenda-hide-tags-regexp "errands\\|leisure\\|unplanned\\|academia\\|cuppa\\|traverse" ;; hide these tags in agenda view
                    org-agenda-prefix-format '(                                                ;; agenda view display category and filename
                                               (agenda . " %i %?-12t % s")
                                               (todo . " %i %(aporan/agenda-prefix)")
@@ -215,7 +215,12 @@
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
                    '(("o" "Office View"
-                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\""
+                      ((tags "PRIORITY=\"A\""
+                             ((org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS")))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
+                              (org-agenda-overriding-header "👻 MyCurrentTask")))
+                       (tags "PRIORITY=\"A\"|PRIORITY=\"B\""
                              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                               (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "⇈ High-Priority")))
@@ -227,7 +232,7 @@
                                     (aporan/org-skip-subtree-if-priority ?B)
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "Unplanned ┐")))
+                              (org-agenda-overriding-header "Unplanned 🐚┐")))
                        (agenda "" ((org-agenda-span 5)))
                        (tags "traverse"
                              ((org-agenda-skip-function
