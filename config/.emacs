@@ -215,7 +215,7 @@
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
                    '(("o" "Office View"
-                      ((tags "PRIORITY=\"A\""
+                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\""
                              ((org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS")))
                               (org-agenda-prefix-format '((tags . "  %b ")))
