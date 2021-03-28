@@ -4,3 +4,5 @@ alias kbd='setxkbmap -option'
 alias altkbd='setxkbmap -option ctrl:swap_lalt_lctl'
 
 alias em='emacsclient -c -a "" &; disown'
+
+alias net='hledger bal netincome -M --tree --transpose | tail -n13 | awk "NR>4 {gsub(/,/,\"\",\$3); print \$3};" | spark'

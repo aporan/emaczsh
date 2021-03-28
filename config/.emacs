@@ -214,8 +214,27 @@
 
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
-                   '(("o" "Office View"
+                   '(("g" "Home Overview"
+                      ((agenda "" ((org-agenda-span 1)
+                                   (org-agenda-use-time-grid nil)
+                                   (org-agenda-skip-function
+                                    '(org-agenda-skip-subtree-if 'notregexp "habit"))
+                                   (org-agenda-overriding-header "\n\n\n\n\n\n\n\n\n\n╾╾╾╾ Have I done my habits?")))
+                       (agenda "" ((org-agenda-span 1)
+                                   (org-agenda-skip-function
+                                    '(org-agenda-skip-subtree-if 'regexp "habit"))
+                                   (org-agenda-overriding-header "\n\n╾╾╾╾ What's happening?\n")))
+                       (tags "PRIORITY=\"A\"|PRIORITY=\"B\""
+                             ((org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS" "WAITING")))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
+                              (org-agenda-overriding-header "\n╾╾╾╾ I am focusing on ┐")))
+                       )
+                      ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))
+
+                     ("o" "Office View"
                       ((tags "PRIORITY=\"A\"|PRIORITY=\"B\""
+
                              ((org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS")))
                               (org-agenda-prefix-format '((tags . "  %b ")))
@@ -257,17 +276,42 @@
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-job.org"))))
 
                      ("p" "Personal View"
-                      ((tags "PRIORITY=\"A\""
-                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\"|PRIORITY=\"C\""
+                             ((org-agenda-skip-function
+                               '(org-agenda-skip-entry-if 'todo 'done))
                               (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "⇈ High-Priority")))
-                       (agenda "" ((org-agenda-span 3)))
+                              (org-agenda-overriding-header "🐾 Flowing")))
+                       (tags "cuppa"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
+                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "☕ Cup-of-Tea")))
+                       (tags "errands"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
+                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "🛠 Errands")))
+                       (tags "leisure"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
+                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ Leisure")))
                        (tags "traverse"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))
                                     (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    (aporan/org-skip-subtree-if-priority ?A)))
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
                               (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "⊶ Route53A")))
                        (tags "academia"
@@ -275,37 +319,17 @@
                                '(or (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))
                                     (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    (aporan/org-skip-subtree-if-priority ?A)))
+                                    (aporan/org-skip-subtree-if-priority ?A)
+                                    (aporan/org-skip-subtree-if-priority ?B)))
                               (org-agenda-prefix-format '((tags . "  %b %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "🐾 Learning Topics")))
-                       (tags "vocation"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "♉ Cup-of-Tea")))
-                       (tags "leisure"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ Leisure")))
-                       (tags "errands"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "🐾 Errands")))
                        (alltodo ""
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
                                        (aporan/org-agenda-skip-tag "traverse")
                                        (aporan/org-agenda-skip-tag "academia")
-                                       (aporan/org-agenda-skip-tag "vocation")
+                                       (aporan/org-agenda-skip-tag "cuppa")
                                        (aporan/org-agenda-skip-tag "leisure")
                                        (aporan/org-agenda-skip-tag "errands")
                                        (aporan/org-agenda-skip-tag "leisure")
@@ -313,7 +337,9 @@
                                  (org-agenda-overriding-header "🐾 Everything-Else"))))
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
 
-             (require 'org-habit))
+             (require 'org-habit)
+             (setq org-habit-graph-column 60))
+
 
 (use-package org-sidebar
             :ensure t
@@ -592,7 +618,57 @@
 (use-package darkroom
             :ensure t
             :config
-            (setq darkroom-text-scale-increase 1))
+            (setq darkroom-text-scale-increase 0.6))
+
+(use-package deft
+            :ensure t
+            :commands (deft)
+            :bind ("C-c d" . deft)
+            :init
+            (setq deft-extensions '("org" "md")
+                  deft-directory "~/Github/aporan.github.io/notes"
+                  deft-ignore-file-regexp "index"
+                  deft-recursive t
+                  deft-use-filename-as-title t)
+            :config
+            (setq deft-file-naming-rules
+                  '((noslash . "_")
+                    (nospace . "-")
+                    (case-fn . downcase))))
+
+(use-package zetteldeft
+            :ensure t
+            :after deft
+            :config
+            (zetteldeft-set-classic-keybindings)
+
+            (defun aporan/zdeft-notes ()
+              (interactive)
+              (deft)
+              (setq deft-directory "~/Github/aporan.github.io/notes"
+                    deft-default-extension "org")
+              (deft-refresh))
+
+            (defun aporan/zdeft-blog ()
+              (deft)
+              (interactive)
+              (setq deft-directory "~/Github/aporan.github.io/blog"
+                    deft-default-extension "org")
+              (deft-refresh))
+ 
+            (defun aporan/zdeft-quran ()
+              (deft)
+              (interactive)
+              (setq deft-directory "~/Github/aporan.github.io/books/quran"
+                    deft-default-extension "org")
+              (deft-refresh))
+
+            (defun aporan/zdeft-office ()
+              (deft)
+              (interactive)
+              (setq deft-directory "~/project/meeting-minutes"         ;; @ work laptop
+                    deft-default-extension "md")
+              (deft-refresh)))
 
 (use-package telephone-line
              :ensure t
@@ -729,6 +805,21 @@
 (use-package try
              :ensure t)
 
+
+;; aporan/functions
+;;
+;;
+(defun aporan/org-agenda-simple (&optional arg)                                ;; keybinding for favourite agenda view
+  (interactive "P")                                                                ;; http://emacs.stackexchange.com/questions/864/how-to-bind-a-key-to-a-specific-agenda-command-list-in-org-mode
+  (org-agenda arg "g"))                                                            ;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
+
+
+;; aporan/key-bindings
+;;
+;;
+(bind-key "C-<tab>" 'aporan/org-agenda-simple)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -740,7 +831,7 @@
  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
  '(package-selected-packages
    (quote
-    (color-theme-modern python-mode puppet-mode hl-todo magit-todos telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+    (puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
  '(paradox-github-token t))
 
 
