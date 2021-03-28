@@ -655,7 +655,7 @@
               (setq deft-directory "~/Github/aporan.github.io/blog"
                     deft-default-extension "org")
               (deft-refresh))
- 
+
             (defun aporan/zdeft-quran ()
               (deft)
               (interactive)
@@ -666,7 +666,7 @@
             (defun aporan/zdeft-office ()
               (deft)
               (interactive)
-              (setq deft-directory "~/project/meeting-minutes"         ;; @ work laptop
+              (setq deft-directory "~/projects/meeting-minutes"         ;; @ work laptop
                     deft-default-extension "md")
               (deft-refresh)))
 
@@ -812,7 +812,6 @@
 (defun aporan/org-agenda-simple (&optional arg)                                ;; keybinding for favourite agenda view
   (interactive "P")                                                                ;; http://emacs.stackexchange.com/questions/864/how-to-bind-a-key-to-a-specific-agenda-command-list-in-org-mode
   (org-agenda arg "g"))                                                            ;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
-
 
 ;; aporan/key-bindings
 ;;
