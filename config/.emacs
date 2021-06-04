@@ -155,8 +155,11 @@
              (setq org-src-fontify-natively t)                                                ;; syntax highlighting for code block
              (setq org-image-actual-width nil)
 
-             (setq org-capture-templates
+               (setq org-capture-templates
                    '(
+                     ("o"                                                                     ;; tasks which needs to be done eventually
+                      "New Todo" entry (file+headline "~/Gitlab/organizer/tasks/office/usec-unplanned.org" "Daily")
+                      "* TODO %? \n  <CREATED>: %(org-insert-time-stamp (org-read-date nil t \"+5d\")) DEADLINE: %^t\n  :LOGBOOK: \n    - State \"TODO\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)
                      ("t"                                                                     ;; tasks which needs to be done eventually
                       "New Todo" entry (file "")
                       "* TODO %?%^g \n  :LOGBOOK: \n   - State \"TODO\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)
@@ -239,10 +242,6 @@
                                '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS")))
                               (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "👻 MyCurrentTask")))
-                       (tags "PRIORITY=\"A\"|PRIORITY=\"B\""
-                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "⇈ High-Priority")))
                        (tags "unplanned"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'todo 'done)
@@ -251,7 +250,11 @@
                                     (aporan/org-skip-subtree-if-priority ?B)
                                     (aporan/org-skip-subtree-if-priority ?A)))
                               (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "Unplanned 🐚┐")))
+                              (org-agenda-overriding-header "Daily 🐚┐")))
+                       (tags "PRIORITY=\"A\"|PRIORITY=\"B\""
+                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'done 'todo '("IN-PROGRESS" "DONE" "CANCELLED")))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
+                              (org-agenda-overriding-header "⇈ High-Priority")))
                        (agenda "" ((org-agenda-span 5)))
                        (tags "traverse"
                              ((org-agenda-skip-function
@@ -273,7 +276,7 @@
                                        (org-agenda-skip-if nil '(scheduled deadline))))
                                  (org-agenda-overriding-header "🐾 Backlog"))))
 
-                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-job.org"))))
+                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-job.org" "~/Gitlab/organizer/tasks/office/usec-unplanned.org"))))
 
                      ("p" "Personal View"
                       ((tags "PRIORITY=\"A\"|PRIORITY=\"B\"|PRIORITY=\"C\""
@@ -735,6 +738,12 @@
 (use-package yaml-mode
              :ensure t)
 
+(use-package powershell
+             :ensure t)
+
+(use-package nginx-mode
+             :ensure t)
+
 (use-package markdown-mode
              :ensure t
              :commands (markdown-mode gfm-mode)
@@ -817,7 +826,7 @@
 ;;
 ;;
 (bind-key "C-<tab>" 'aporan/org-agenda-simple)
-
+(bind-key "C-c o" (lambda () (interactive) (org-capture nil "o")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -830,7 +839,7 @@
  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
  '(package-selected-packages
    (quote
-    (puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+    (nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
  '(paradox-github-token t))
 
 
