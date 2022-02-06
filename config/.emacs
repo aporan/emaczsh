@@ -236,8 +236,7 @@
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))
 
                      ("o" "Office View"
-                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\""
-
+                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\"|PRIORITY=\"C\""
                              ((org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS")))
                               (org-agenda-prefix-format '((tags . "  %b ")))
@@ -263,7 +262,8 @@
                                     (org-agenda-skip-entry-if 'nottodo 'todo)
                                     ;; (org-agenda-skip-entry-if 'nottodo '("ASSIGNED"))
                                     (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
+                                    (aporan/org-skip-subtree-if-priority ?B)
+                                    (aporan/org-skip-subtree-if-priority ?C)))
                               (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "⊶ Route53B")))
 
@@ -271,6 +271,7 @@
                                 ((org-agenda-skip-function
                                   '(or (aporan/org-skip-subtree-if-priority ?A)
                                        (aporan/org-skip-subtree-if-priority ?B)
+                                       (aporan/org-skip-subtree-if-priority ?C)
                                        (aporan/org-agenda-skip-tag "traverse")
                                        (aporan/org-agenda-skip-tag "unplanned")
                                        (org-agenda-skip-if nil '(scheduled deadline))))
