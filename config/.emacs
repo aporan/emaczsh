@@ -186,9 +186,11 @@
 
              (setq org-tag-alist '(("academia" . ?a)                                          ;; categorize header tag list
                                    ("blog" . ?b)                                              ;; related to blogging
+                                   ("daily" . ?d)                                             ;; tasks for today
                                    ("errands" . ?e)                                           ;; related repeated / one time chores / errands
                                    ("leisure" . ?l)                                           ;; related to casual / reading / enjoyment
                                    ("traverse" . ?t)                                          ;; career and life goal
+                                   ("unplanned" . ?u)                                         ;; unplanned items in work / life
                                    ("cuppa" . ?c)))                                           ;; fun things to do which maybe bumped up to traverse
              (setq org-hide-leading-stars t
                    org-enforce-todo-dependencies t                                            ;; enforce children dependencies on parents for todo's
@@ -208,7 +210,7 @@
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
-                   org-agenda-hide-tags-regexp "errands\\|leisure\\|unplanned\\|academia\\|cuppa\\|traverse" ;; hide these tags in agenda view
+                   org-agenda-hide-tags-regexp "errands\\|leisure\\|unplanned\\|academia\\|cuppa\\|traverse\\|daily" ;; hide these tags in agenda view
                    org-agenda-prefix-format '(                                                ;; agenda view display category and filename
                                               (agenda . " %i %?-12t % s")
                                               (todo . " %i %(aporan/agenda-prefix)")
@@ -236,49 +238,31 @@
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))
 
                      ("o" "Office View"
-                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\"|PRIORITY=\"C\""
+                      ((tags "daily"
                              ((org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS")))
+                               '(or (aporan/org-agenda-skip-tag "unplanned")
+                                    (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))))
                               (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "👻 MyCurrentTask")))
+                              (org-agenda-overriding-header "Daily 🐚┐")))
                        (tags "unplanned"
                              ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    (aporan/org-skip-subtree-if-priority ?B)
-                                    (aporan/org-skip-subtree-if-priority ?A)))
-                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "Daily 🐚┐")))
-                       (tags "PRIORITY=\"A\"|PRIORITY=\"B\""
-                             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'done 'todo '("IN-PROGRESS" "DONE" "CANCELLED")))
+                               '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))
+                                    (org-agenda-skip-if nil '(scheduled))))
                               (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "⇈ High-Priority")))
+                              (org-agenda-overriding-header "⇈ Unplanned")))
                        (agenda "" ((org-agenda-span 5)))
                        (tags "traverse"
                              ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
+                               '(or (aporan/org-agenda-skip-tag "unplanned")
+                                    (aporan/org-agenda-skip-tag "daily")
+                                    (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))
-                                    (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    ;; (org-agenda-skip-entry-if 'nottodo '("ASSIGNED"))
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)
-                                    (aporan/org-skip-subtree-if-priority ?C)))
-                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "⊶ Route53B")))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)))
+                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "🐾 Backlog"))))
 
-                       (alltodo ""
-                                ((org-agenda-skip-function
-                                  '(or (aporan/org-skip-subtree-if-priority ?A)
-                                       (aporan/org-skip-subtree-if-priority ?B)
-                                       (aporan/org-skip-subtree-if-priority ?C)
-                                       (aporan/org-agenda-skip-tag "traverse")
-                                       (aporan/org-agenda-skip-tag "unplanned")
-                                       (org-agenda-skip-if nil '(scheduled deadline))))
-                                 (org-agenda-overriding-header "🐾 Backlog"))))
-
-                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-job.org" "~/Gitlab/organizer/tasks/office/usec-unplanned.org"))))
-
+                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-daily.org"))))
                      ("p" "Personal View"
                       ((tags "PRIORITY=\"A\"|PRIORITY=\"B\"|PRIORITY=\"C\""
                              ((org-agenda-skip-function
