@@ -385,7 +385,9 @@
              :bind ("C-c p" . projectile-command-map)
              :config
              (projectile-mode t)
-             (setq projectile-completion-system 'ivy))
+             (setq projectile-completion-system 'ivy)
+             (setq projectile-enable-caching t)
+             (setq projectile-indexing-method 'native))
 
 (use-package counsel-projectile
              :ensure t
@@ -447,8 +449,9 @@
             :ensure t)
 
 (use-package dart-mode
-            :init
-            (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
+            :disabled)
+            ;; :init
+            ;; (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
 
 (use-package company
             :ensure t
@@ -819,12 +822,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   (quote
-    ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
+   '("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default))
  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
  '(package-selected-packages
-   (quote
-    (nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+   '(nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package))
  '(paradox-github-token t))
 
 
