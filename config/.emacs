@@ -1,4 +1,4 @@
-(require 'package)                                                                            ;; load package file
+ (require 'package)                                                                            ;; load package file
 
 (add-to-list 'package-archives                                                                ;; add melpa to package archives for more packages
              '("melpa" . "https://melpa.org/packages/"))
@@ -17,7 +17,7 @@
                                                                                         ;; visual
  package-enable-at-startup nil                                                                ;; disable package loading after the init file
  inhibit-startup-screen t                                                                     ;; disable emacs startup splash screen
- default-frame-alist '((fullscreen . fullboth))                                               ;; always open emacs in fullscreen
+ ;; default-frame-alist '((fullscreen . fullboth))                                               ;; always open emacs in fullscreen
 
  ansi-color-faces-vector [default default default italic underline success warning error])
 
@@ -45,10 +45,7 @@
 (set-face-attribute 'default nil                                                              ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
-                    :slant 'normal
-                    :height 200
-                    :weight 'normal
-                    :width 'normal)
+                    :height 150)
 
 
 (unless (package-installed-p 'use-package)                                                    ;; install `use-package` if its not installed
@@ -179,19 +176,15 @@
                       "NEXT(n)"                                                               ;; tasks which are next in Q
                       "WAITING(w@)"                                                           ;; waiting for someone / something
                       "ALLOT(a@)"                                                             ;; work which is delegated
+                      "EPIC(e)"                                                               ;; tasks which are under way
                       "IN-PROGRESS(p)" "|"                                                    ;; tasks which are under way
                       "DONE(d!)"                                                              ;; completed tasks
                       "CANCELLED(c@)")))                                                      ;; tasks which are no longer relevant
 
 
-             (setq org-tag-alist '(("academia" . ?a)                                          ;; categorize header tag list
-                                   ("blog" . ?b)                                              ;; related to blogging
-                                   ("daily" . ?d)                                             ;; tasks for today
-                                   ("errands" . ?e)                                           ;; related repeated / one time chores / errands
-                                   ("leisure" . ?l)                                           ;; related to casual / reading / enjoyment
+             (setq org-tag-alist '(("daily" . ?d)                                             ;; tasks for today
                                    ("traverse" . ?t)                                          ;; career and life goal
-                                   ("unplanned" . ?u)                                         ;; unplanned items in work / life
-                                   ("cuppa" . ?c)))                                           ;; fun things to do which maybe bumped up to traverse
+                                   ("unplanned" . ?u)))                                       ;; unplanned items in work / life
              (setq org-hide-leading-stars t
                    org-enforce-todo-dependencies t                                            ;; enforce children dependencies on parents for todo's
                    org-lowest-priority 69                                                     ;; change lowest priority number to extend priority values
@@ -219,22 +212,46 @@
 
 
              (setq org-agenda-custom-commands                                                 ;; custom org-agenda view with 3 sections filtered according to priorities
-                   '(("g" "Home Overview"
-                      ((agenda "" ((org-agenda-span 1)
+                   '(("h" "Home Overview"
+                      ((tags "daily"
+                             ((org-agenda-skip-function
+                               '(or (aporan/org-agenda-skip-tag "unplanned")
+                                    (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
+                              (org-agenda-overriding-header "Daily 🐚┐")))
+                       (tags "unplanned"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))
+                                    (org-agenda-skip-if nil '(scheduled))))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
+                              (org-agenda-overriding-header "⇈ Unplanned")))
+
+                       (agenda "" ((org-agenda-span 1)
                                    (org-agenda-use-time-grid nil)
                                    (org-agenda-skip-function
                                     '(org-agenda-skip-subtree-if 'notregexp "habit"))
-                                   (org-agenda-overriding-header "\n\n\n\n\n\n\n\n\n\n╾╾╾╾ Have I done my habits?")))
+                                   (org-agenda-overriding-header "Repeated Tasks/Habits ...?\n")))
+
                        (agenda "" ((org-agenda-span 1)
                                    (org-agenda-skip-function
                                     '(org-agenda-skip-subtree-if 'regexp "habit"))
-                                   (org-agenda-overriding-header "\n\n╾╾╾╾ What's happening?\n")))
-                       (tags "PRIORITY=\"A\"|PRIORITY=\"B\""
+                                   (org-agenda-overriding-header "What's happening?\n"))))
+
+                      ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))
+
+
+                     ("b" "Backlog"
+                      ((tags "traverse"
                              ((org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'done 'nottodo '("IN-PROGRESS" "WAITING")))
-                              (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "\n╾╾╾╾ I am focusing on ┐")))
-                       )
+                               '(or (aporan/org-agenda-skip-tag "unplanned")
+                                    (aporan/org-agenda-skip-tag "daily")
+                                    (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-if nil '(scheduled))
+                                    (org-agenda-skip-entry-if 'nottodo 'todo)))
+                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
+                              (org-agenda-overriding-header "⊶ Route53A"))))
+
                       ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))
 
                      ("o" "Office View"
@@ -262,68 +279,21 @@
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
                               (org-agenda-overriding-header "🐾 Backlog"))))
 
-                      ((org-agenda-files '("~/Gitlab/organizer/tasks/office/usec-daily.org"))))
-                     ("p" "Personal View"
-                      ((tags "PRIORITY=\"A\"|PRIORITY=\"B\"|PRIORITY=\"C\""
-                             ((org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'todo 'done))
-                              (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "🐾 Flowing")))
-                       (tags "cuppa"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "☕ Cup-of-Tea")))
-                       (tags "errands"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "🛠 Errands")))
-                       (tags "leisure"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
-                              (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "♪~ ᕕ(ᐛ)ᕗ Leisure")))
-                       (tags "traverse"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
-                              (org-agenda-prefix-format '((tags . "  %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "⊶ Route53A")))
-                       (tags "academia"
-                             ((org-agenda-skip-function
-                               '(or (org-agenda-skip-entry-if 'todo 'done)
-                                    (org-agenda-skip-if nil '(scheduled))
-                                    (org-agenda-skip-entry-if 'nottodo 'todo)
-                                    (aporan/org-skip-subtree-if-priority ?A)
-                                    (aporan/org-skip-subtree-if-priority ?B)))
-                              (org-agenda-prefix-format '((tags . "  %b %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "🐾 Learning Topics")))
-                       (alltodo ""
-                                ((org-agenda-skip-function
-                                  '(or (aporan/org-skip-subtree-if-priority ?A)
-                                       (aporan/org-skip-subtree-if-priority ?B)
-                                       (aporan/org-agenda-skip-tag "traverse")
-                                       (aporan/org-agenda-skip-tag "academia")
-                                       (aporan/org-agenda-skip-tag "cuppa")
-                                       (aporan/org-agenda-skip-tag "leisure")
-                                       (aporan/org-agenda-skip-tag "errands")
-                                       (aporan/org-agenda-skip-tag "leisure")
-                                       (org-agenda-skip-if nil '(scheduled deadline))))
-                                 (org-agenda-overriding-header "🐾 Everything-Else"))))
-                      ((org-agenda-files '("~/Gitlab/organizer/tasks/"))))))
+                      ((org-agenda-files
+                        '("~/Gitlab/organizer/tasks/office/usec-daily.org"))))
+
+                     ))
+
+             ;; inside .emacs file
+             (setq org-latex-listings 'minted
+                   org-latex-packages-alist '(("" "minted"))
+                   org-latex-pdf-process
+                   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+             (setq org-latex-minted-options '(("breaklines" "true")
+                                              ("breakanywhere" "true")))
 
              (require 'org-habit)
              (setq org-habit-graph-column 60))
@@ -331,9 +301,24 @@
 
 (use-package org-sidebar
             :ensure t
-            :bind (:map org-mode-map
-                        ("C-c b" . org-sidebar)
-                        ("C-c C-b" . org-sidebar-tree-toggle)))
+            :bind (("C-c b" . org-sidebar)
+                   ("C-c C-b" . org-sidebar-tree-toggle)))
+
+(use-package org-journal
+            :ensure t
+            :defer t
+            :config
+            (setq org-journal-dir "~/Gitlab/organizer/personal-treasure-island/"
+                  org-journal-date-prefix "#+TITLE: "
+                  org-journal-time-prefix "* "
+                  org-journal-file-format "%Y-%m-%d.org"
+                  org-journal-date-format "%a, %d %B %Y"))
+
+(use-package org-journal-list
+            :ensure t
+            :config
+            (setq org-journal-list-default-directory "~/Gitlab/organizer/personal-treasure-island/"
+                  org-journal-list-create-temp-buffer t))
 
 (use-package adaptive-wrap
              :ensure t
@@ -433,15 +418,16 @@
 
 
 (use-package magit-todos
-             :after magit
-             :ensure t
-             :commands (magit-todos-mode)
-             :hook (magit-mode . magit-todos-mode)
-             :config
-             (setq magit-todos-recursive t
-                   magit-todos-depth 100)
-             (custom-set-variables
-              '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))))
+             :disabled)
+             ;; :after magit
+             ;; :ensure t
+             ;; :commands (magit-todos-mode)
+             ;; :hook (magit-mode . magit-todos-mode)
+             ;; :config
+             ;; (setq magit-todos-recursive t
+             ;;       magit-todos-depth 100)
+             ;; (custom-set-variables
+             ;;  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))))
 
 (use-package python-mode
             :ensure t)
@@ -469,7 +455,7 @@
                         :after flycheck
                         :ensure t
                         :config
-                        (setq flycheck-python-pyflakes-executable "pyflakes3"))
+                        (setq flycheck-python-pyflakes-executable "pyflakes"))
 
             (use-package flycheck-color-mode-line
                         :after flycheck
@@ -518,9 +504,27 @@
               (interactive)
               (highlight-regexp "\\(\\$-\\|-\\$\\)[.,0-9]+" (quote hi-red-b)))
 
+            (defvar aporan/ledger-report-liquid-assets
+              (list "liquid-assets"
+                    (concat "%(binary) "                                                       ;; REFER: https://unconj.ca/blog/using-hledger-with-ledger-mode.html
+                            "-f %(ledger-file) bal -B --flat "
+                            "assets:pa assets:s assets:f assets:g assets:d assets:bank:ch")))
+
+            (defvar aporan/ledger-report-netincome
+              (list "report-netincome"
+                    (concat "%(binary) " 
+                            "-f %(ledger-file) bal -M -A --flat --transpose --pretty-tables "
+                            "netincome retained earnings")))
+
+            (defvar aporan/ledger-report-blackhole
+              (list "report-blackhole"
+                    (concat "%(binary) " 
+                            "-f %(ledger-file) bal -M -A --flat --transpose --pretty-tables "
+                            "blackhole")))
+
             (defvar aporan/ledger-report-daily-expenses
               (list "day-expenses"
-                    (concat "%(binary) "                                                       ;; REFER: https://unconj.ca/blog/using-hledger-with-ledger-mode.html
+                    (concat "%(binary) "
                             "-f %(ledger-file) bal expenses "
                             "--tree --average --row-total -ED --pretty-tables -p 'this week'")))
 
@@ -540,13 +544,19 @@
               (list "mnth-expenses"
                     (concat "%(binary) "
                             "-f %(ledger-file) bal expenses "
-                            "--tree --no-total --row-total --average -M --pretty-tables")))
+                            "--tree --no-total --row-total --average -M --pretty-tables -p 'this year to today'")))
 
             (defvar aporan/ledger-report-balance-sheet-cost
               (list "balance-sheet-cost"
                     (concat "%(binary) "
-                            "-f %(ledger-file) bse -B "
+                            "-f %(ledger-file) bse -B -p 'this year to today' "
                             "--flat -M --pretty-tables")))
+
+            (defvar aporan/ledger-report-balance-sheet-curr-month-cost
+              (list "balance-sheet--curr-mnth-cost"
+                    (concat "%(binary) "
+                            "-f %(ledger-file) bse -B -p 'this month' "
+                            "--flat --pretty-tables")))
 
             (defvar aporan/ledger-report-net-account-balance
               (list "net-account-balance"
@@ -554,47 +564,41 @@
                             "-f %(ledger-file) bal -BAE "
                             "--tree -M --pretty-tables")))
 
-            (defvar aporan/ledger-report-curr-month-budget                                   ;; budget functions
-              (list "mnth-budget"
+            (defvar aporan/ledger-report-exp-budget                                        ;; budget functions
+              (list "exp-budget"
                     (concat "%(binary) "
-                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
-                            "--budget -ME cur:SGD --pretty-tables")))
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -BE "
+                            "--budget cur:SGD --no-total --pretty-tables -p 'this month' "
+                            "--tree expenses")))
 
-            (defvar aporan/ledger-report-curr-month-budget-transpose
-              (list "mnth-budget-transpose"
+            (defvar aporan/ledger-report-exp-cum-budget
+              (list "exp-cum-budget"
                     (concat "%(binary) "
-                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
-                            "--budget -M cur:SGD --pretty-tables --transpose")))
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B -M "
+                            "--budget --cumulative cur:SGD --no-total --pretty-tables -p 'from last month to next month' "
+                            "--tree expenses")))
 
-            (defvar aporan/ledger-report-budget-forecast
-              (list "budget-forecast"
+            (defvar aporan/ledger-report-savings-forecast
+              (list "savings-forecast"
                     (concat "%(binary) "
-                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
-                            "--budget --forecast -ME cur:SGD --pretty-tables")))
+                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B -M "
+                            "--historical --cumulative --forecast cur:SGD --no-total --pretty-tables -p 'this year' "
+                            "--tree assets:d assets:subscriptions assets:f asset:g assets:savings:r "
+                            "assets:savings:h assets:savings:e assets:savings:i")))
 
-            (defvar aporan/ledger-report-env-budget-forecast
-              (list "env-budget-forecast"
-                    (concat "%(binary) "
-                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
-                            "--budget --cumulative --forecast -ME --depth 2 cur:SGD --pretty-tables")))
-
-            (defvar aporan/ledger-report-quarterly-forecast
-              (list "qtr-forecast"
-                    (concat "%(binary) "
-                            "-f %(ledger-file) -f ~/Gitlab/ppocket/budget.journal bal -B "
-                            "--budget --cumulative --forecast -p 'every 3 months' --depth 1 cur:SGD --pretty-tables")))
-
+            (add-to-list 'ledger-reports aporan/ledger-report-liquid-assets)
+            (add-to-list 'ledger-reports aporan/ledger-report-netincome)
+            (add-to-list 'ledger-reports aporan/ledger-report-blackhole)
             (add-to-list 'ledger-reports aporan/ledger-report-daily-expenses)
             (add-to-list 'ledger-reports aporan/ledger-report-year-weekly-expenses)
             (add-to-list 'ledger-reports aporan/ledger-report-month-weekly-expenses)
             (add-to-list 'ledger-reports aporan/ledger-report-monthly-expenses)
             (add-to-list 'ledger-reports aporan/ledger-report-net-account-balance)
             (add-to-list 'ledger-reports aporan/ledger-report-balance-sheet-cost)
-            (add-to-list 'ledger-reports aporan/ledger-report-curr-month-budget)
-            (add-to-list 'ledger-reports aporan/ledger-report-curr-month-budget-transpose)
-            (add-to-list 'ledger-reports aporan/ledger-report-budget-forecast)
-            (add-to-list 'ledger-reports aporan/ledger-report-env-budget-forecast)
-            (add-to-list 'ledger-reports aporan/ledger-report-quarterly-forecast))
+            (add-to-list 'ledger-reports aporan/ledger-report-balance-sheet-curr-month-cost)
+            (add-to-list 'ledger-reports aporan/ledger-report-exp-budget)
+            (add-to-list 'ledger-reports aporan/ledger-report-exp-cum-budget)
+            (add-to-list 'ledger-reports aporan/ledger-report-savings-forecast))
 
 
 (use-package flymake
@@ -777,7 +781,7 @@
                                  :background 'unspecified
                                  :height 1.0)
 
-             (set-face-attribute 'cfw:face-today nil                                         ;; current days tasks 
+             (set-face-attribute 'cfw:face-today nil                                         ;; current days tasks
                                  :foreground "#f9e07c"
                                  :height 1.0)
 
@@ -805,7 +809,7 @@
 ;;
 (defun aporan/org-agenda-simple (&optional arg)                                ;; keybinding for favourite agenda view
   (interactive "P")                                                                ;; http://emacs.stackexchange.com/questions/864/how-to-bind-a-key-to-a-specific-agenda-command-list-in-org-mode
-  (org-agenda arg "g"))                                                            ;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
+  (org-agenda arg "h"))                                                            ;; http://pragmaticemacs.com/emacs/a-shortcut-to-my-favourite-org-mode-agenda-view/
 
 ;; aporan/key-bindings
 ;;
@@ -819,12 +823,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   (quote
-    ("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default)))
+   '("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default))
  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
+ '(org-agenda-files
+   '("~/Gitlab/ppocket/salary.bucket.org" "/home/augusthome/Gitlab/organizer/tasks/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/career.org" "/home/augusthome/Gitlab/organizer/tasks/do.org" "/home/augusthome/Gitlab/organizer/tasks/finance.org" "/home/augusthome/Gitlab/organizer/tasks/habit.org" "/home/augusthome/Gitlab/organizer/tasks/learn.org" "/home/augusthome/Gitlab/organizer/tasks/orgnotes.org" "/home/augusthome/Gitlab/organizer/tasks/projects.org" "/home/augusthome/Gitlab/organizer/tasks/repeat.org" "/home/augusthome/Gitlab/organizer/tasks/ships.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-backlog.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-daily.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-overview.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-unplanned.org"))
  '(package-selected-packages
-   (quote
-    (nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package)))
+   '(nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package))
  '(paradox-github-token t))
 
 
