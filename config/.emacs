@@ -370,7 +370,9 @@
              :bind ("C-c p" . projectile-command-map)
              :config
              (projectile-mode t)
-             (setq projectile-completion-system 'ivy))
+             (setq projectile-completion-system 'ivy)
+             (setq projectile-enable-caching t)
+             (setq projectile-indexing-method 'native))
 
 (use-package counsel-projectile
              :ensure t
@@ -433,8 +435,9 @@
             :ensure t)
 
 (use-package dart-mode
-            :init
-            (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
+            :disabled)
+            ;; :init
+            ;; (setq dart-sdk-path "~/Github/flutter/bin/cache/dart-sdk/"))
 
 (use-package company
             :ensure t
