@@ -45,7 +45,10 @@
 (set-face-attribute 'default nil                                                              ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
-                    :height 150)
+                    :slant 'normal
+                    :height 180
+                    :weight 'normal
+                    :width 'normal)
 
 
 (unless (package-installed-p 'use-package)                                                    ;; install `use-package` if its not installed
@@ -147,7 +150,7 @@
                      (concat str "↬ ")))))
 
              (add-to-list 'org-structure-template-alist                                       ;; add blog easy template for .org files
-                          '("B" "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
+                          '("B" . "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
 
              (setq org-src-fontify-natively t)                                                ;; syntax highlighting for code block
              (setq org-image-actual-width nil)
@@ -155,7 +158,7 @@
                (setq org-capture-templates
                    '(
                      ("o"                                                                     ;; tasks which needs to be done eventually
-                      "New Todo" entry (file+headline "~/Gitlab/organizer/tasks/office/usec-unplanned.org" "Daily")
+                      "New Todo" entry (file+headline "~/Gitlab/organizer/tasks/office/unplanned.org" "Daily")
                       "* TODO %? \n  <CREATED>: %(org-insert-time-stamp (org-read-date nil t \"+5d\")) DEADLINE: %^t\n  :LOGBOOK: \n    - State \"TODO\" set at %U \n  :END: \n\n  %i\n" :empty-lines 1)
                      ("t"                                                                     ;; tasks which needs to be done eventually
                       "New Todo" entry (file "")
@@ -186,6 +189,7 @@
                                    ("traverse" . ?t)                                          ;; career and life goal
                                    ("unplanned" . ?u)))                                       ;; unplanned items in work / life
              (setq org-hide-leading-stars t
+                   org-hide-emphasis-markers nil                                              ;; show text in it's formatted style along with the shortcuts
                    org-enforce-todo-dependencies t                                            ;; enforce children dependencies on parents for todo's
                    org-lowest-priority 69                                                     ;; change lowest priority number to extend priority values
                    org-deadline-warning-days 7                                                ;; change early warning days
@@ -200,6 +204,7 @@
 
              (setq org-agenda-files '("~/Gitlab/organizer/tasks" "~/Gitlab/organizer/tasks/office")
                    org-default-notes-file "~/Gitlab/organizer/tasks/orgnotes.org"
+                   org-agenda-breadcrumbs-separator " > "                                     ;; custom breadcrumbs separator in agenda view
                    org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
@@ -260,8 +265,8 @@
                                '(or (aporan/org-agenda-skip-tag "unplanned")
                                     (org-agenda-skip-entry-if 'todo 'done)
                                     (org-agenda-skip-if nil '(scheduled))))
-                              (org-agenda-prefix-format '((tags . "  %b ")))
-                              (org-agenda-overriding-header "Daily 🐚┐")))
+                              (org-agenda-prefix-format '((tags . "  %b")))
+                              (org-agenda-overriding-header "Daily 📜 ┐")))
                        (tags "unplanned"
                              ((org-agenda-skip-function
                                '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))
@@ -277,11 +282,10 @@
                                     (org-agenda-skip-if nil '(scheduled))
                                     (org-agenda-skip-entry-if 'nottodo 'todo)))
                               (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                              (org-agenda-overriding-header "🐾 Backlog"))))
+                              (org-agenda-overriding-header "Backlog 🧟‍♀️ ┐"))))
 
                       ((org-agenda-files
-                        '("~/Gitlab/organizer/tasks/office/usec-daily.org"))))
-
+                        '("~/Gitlab/organizer/tasks/office/daily.org"))))
                      ))
 
              ;; inside .emacs file
@@ -296,6 +300,7 @@
                                               ("breakanywhere" "true")))
 
              (require 'org-habit)
+             (require 'org-tempo)
              (setq org-habit-graph-column 60))
 
 
@@ -661,8 +666,8 @@
             (defun aporan/zdeft-office ()
               (deft)
               (interactive)
-              (setq deft-directory "~/projects/meeting-minutes"         ;; @ work laptop
-                    deft-default-extension "md")
+              (setq deft-directory "~/bytedance/notes"         ;; @ work laptop
+                    deft-default-extension "org")
               (deft-refresh)))
 
 (use-package telephone-line
@@ -829,7 +834,7 @@
    '("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default))
  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
  '(org-agenda-files
-   '("~/Gitlab/ppocket/salary.bucket.org" "/home/augusthome/Gitlab/organizer/tasks/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/career.org" "/home/augusthome/Gitlab/organizer/tasks/do.org" "/home/augusthome/Gitlab/organizer/tasks/finance.org" "/home/augusthome/Gitlab/organizer/tasks/habit.org" "/home/augusthome/Gitlab/organizer/tasks/learn.org" "/home/augusthome/Gitlab/organizer/tasks/orgnotes.org" "/home/augusthome/Gitlab/organizer/tasks/projects.org" "/home/augusthome/Gitlab/organizer/tasks/repeat.org" "/home/augusthome/Gitlab/organizer/tasks/ships.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-backlog.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-daily.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-overview.org" "/home/augusthome/Gitlab/organizer/tasks/office/usec-unplanned.org"))
+   '("~/Gitlab/ppocket/salary.bucket.org" "/home/augusthome/Gitlab/organizer/tasks/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/career.org" "/home/augusthome/Gitlab/organizer/tasks/do.org" "/home/augusthome/Gitlab/organizer/tasks/finance.org" "/home/augusthome/Gitlab/organizer/tasks/habit.org" "/home/augusthome/Gitlab/organizer/tasks/learn.org" "/home/augusthome/Gitlab/organizer/tasks/orgnotes.org" "/home/augusthome/Gitlab/organizer/tasks/projects.org" "/home/augusthome/Gitlab/organizer/tasks/repeat.org" "/home/augusthome/Gitlab/organizer/tasks/ships.org" "/home/augusthome/Gitlab/organizer/tasks/office/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/office/daily.org" "/home/augusthome/Gitlab/organizer/tasks/office/overview.org" "/home/augusthome/Gitlab/organizer/tasks/office/unplanned.org"))
  '(package-selected-packages
    '(nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package))
  '(paradox-github-token t))

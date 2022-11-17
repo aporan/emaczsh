@@ -78,7 +78,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # path for hledger
-export LEDGER_FILE=/home/$ME/Gitlab/ppocket/current.journal
+export LEDGER_FILE=/$BASE/$ME/Gitlab/ppocket/current.journal
+export PASSWORD_STORE_DIR=/$BASE/$ME/Gitlab/password-manager
 
 # zsh completion directory
 fpath=(~/.zsh/completion $fpath)
