@@ -3,6 +3,7 @@ ME=$(whoami)
 
 if [[ `uname` == "Darwin" ]]; then
     BASE=Users
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 else
     BASE=home
 fi
@@ -21,7 +22,10 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions)
+plugins=(git
+         pass
+         zsh-autosuggestions
+         fzf-zsh-plugin)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -83,3 +87,7 @@ export PASSWORD_STORE_DIR=/$BASE/$ME/Gitlab/password-manager
 
 # zsh completion directory
 fpath=(~/.zsh/completion $fpath)
+
+if [[ `uname` == "Darwin" ]]; then
+    export HOMEBREW_NO_AUTO_UPDATE=1
+fi
