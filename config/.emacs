@@ -644,20 +644,6 @@
                     deft-default-extension "org")
               (deft-refresh))
 
-            (defun aporan/zdeft-blog ()
-              (deft)
-              (interactive)
-              (setq deft-directory "~/Github/aporan.github.io/blog"
-                    deft-default-extension "org")
-              (deft-refresh))
-
-            (defun aporan/zdeft-quran ()
-              (deft)
-              (interactive)
-              (setq deft-directory "~/Github/aporan.github.io/books/quran"
-                    deft-default-extension "org")
-              (deft-refresh))
-
             (defun aporan/zdeft-office ()
               (deft)
               (interactive)
