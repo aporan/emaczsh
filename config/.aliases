@@ -4,7 +4,7 @@ if [[ `uname` != "Darwin" ]]; then
    alias open='xdg-open'
    alias kbd='setxkbmap -option'
    alias altkbd='setxkbmap -option ctrl:swap_lalt_lctl'
-else
+fi 
 
 alias em='emacsclient -c -a "" &; disown'
 
