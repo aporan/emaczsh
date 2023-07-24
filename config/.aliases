@@ -1,7 +1,10 @@
 # open aliases
-# alias open='xdg-open'
-# alias kbd='setxkbmap -option'
-# alias altkbd='setxkbmap -option ctrl:swap_lalt_lctl'
+
+if [[ `uname` != "Darwin" ]]; then
+   alias open='xdg-open'
+   alias kbd='setxkbmap -option'
+   alias altkbd='setxkbmap -option ctrl:swap_lalt_lctl'
+else
 
 alias em='emacsclient -c -a "" &; disown'
 

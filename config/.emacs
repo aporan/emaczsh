@@ -205,7 +205,7 @@
              (setq org-agenda-files '("~/Gitlab/organizer/tasks" "~/Gitlab/organizer/tasks/office")
                    org-default-notes-file "~/Gitlab/organizer/tasks/orgnotes.org"
                    org-agenda-breadcrumbs-separator " > "                                     ;; custom breadcrumbs separator in agenda view
-                   org-agenda-block-separator ?                                               ;; 'empty' separator between different org agenda sections
+                   org-agenda-block-separator 12714                                           ;; 'empty' separator between different org agenda sections
                    org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
                    org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
                    org-agenda-hide-tags-regexp "errands\\|leisure\\|unplanned\\|academia\\|cuppa\\|traverse\\|daily" ;; hide these tags in agenda view
@@ -221,7 +221,7 @@
                       ((tags "daily"
                              ((org-agenda-skip-function
                                '(or (aporan/org-agenda-skip-tag "unplanned")
-                                    (org-agenda-skip-entry-if 'todo 'done)
+                                    (org-agenda-skip-entry-if 'todo '("DONE" "WAITING" "TODO"))
                                     (org-agenda-skip-if nil '(scheduled))))
                               (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "Daily 🐚┐")))
@@ -231,7 +231,12 @@
                                     (org-agenda-skip-if nil '(scheduled))))
                               (org-agenda-prefix-format '((tags . "  %b ")))
                               (org-agenda-overriding-header "⇈ Unplanned")))
-
+                       (tags "daily"
+                             ((org-agenda-skip-function
+                               '(or (org-agenda-skip-entry-if 'nottodo '("WAITING"))
+                                    (org-agenda-skip-if nil '(scheduled))))
+                              (org-agenda-prefix-format '((tags . "  %b ")))
+                              (org-agenda-overriding-header "⇈ Held")))
                        (agenda "" ((org-agenda-span 1)
                                    (org-agenda-use-time-grid nil)
                                    (org-agenda-skip-function
