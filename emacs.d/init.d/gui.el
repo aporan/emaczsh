@@ -2,7 +2,8 @@
   :ensure t
   :config
   (setq telephone-line-lhs
-        '((accent . (telephone-line-buffer-modified-segment))
+        '((evil . (telephone-line-evil-tag-segment))
+          (accent . (telephone-line-buffer-modified-segment))
           (nil . (telephone-line-atom-encoding-segment))
           (accent . (telephone-line-projectile-segment))
           (nil . (telephone-line-buffer-name-segment))
@@ -14,6 +15,7 @@
                      telephone-line-flycheck-segment
                      telephone-line-process-segment))
           (accent . (telephone-line-major-mode-segment))))
+  (setq telephone-line-evil-use-short-tag t)
   (telephone-line-mode t))
 
 
