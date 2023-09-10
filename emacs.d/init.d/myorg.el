@@ -5,7 +5,8 @@
          ("C-c c" . org-capture)                                                   ;; org capture
          ("C-c i" . org-set-tags-command))                                         ;; org insert tags
   :hook ((org-mode . auto-fill-mode)
-         (org-mode . darkroom-tentative-mode))
+         (org-mode . darkroom-tentative-mode)
+         (org-agenda-finalize-hook . #'aporan/org-agenda-adjust-text-size))
   :config
   (add-to-list 'org-structure-template-alist                                       ;; add blog easy template for .org files
                '("B" . "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
@@ -113,17 +114,29 @@
            ((tags "daily"
                   ((org-agenda-skip-function
                     '(or (aporan/org-agenda-skip-tag "unplanned")
-                         (org-agenda-skip-entry-if 'todo 'done)
+                         (org-agenda-skip-entry-if 'todo '("DONE" "WAITING" "TODO" "ALLOT"))
                          (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-prefix-format '((tags . "  %b")))
                    (org-agenda-overriding-header "Daily 📜 ┐")))
             (tags "unplanned"
                   ((org-agenda-skip-function
-                    '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))
-                         (org-agenda-skip-if nil '(scheduled))))
+                    '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))))
                    (org-agenda-prefix-format '((tags . "  %b ")))
                    (org-agenda-overriding-header "⇈ Unplanned")))
-            (agenda "" ((org-agenda-span 5)))
+            (tags "daily"
+                  ((org-agenda-skip-function
+                    '(or (org-agenda-skip-entry-if 'nottodo '("WAITING" "ALLOT"))
+                         (org-agenda-skip-if nil '(scheduled))))
+                   (org-agenda-prefix-format '((tags . "  %b ")))
+                   (org-agenda-overriding-header "⇈ Held")))
+            (agenda "" ((org-agenda-span 1)
+                        (org-agenda-use-time-grid nil)
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-subtree-if 'notregexp "habit"))
+                        (org-agenda-overriding-header "Professional Habits\n")))
+            (agenda "" ((org-agenda-span 3)
+                        (org-agenda-skip-function
+                         '(org-agenda-skip-subtree-if 'regexp "habit"))))
             (tags "traverse"
                   ((org-agenda-skip-function
                     '(or (aporan/org-agenda-skip-tag "unplanned")
@@ -161,7 +174,6 @@
   
   (require 'org-habit)
   (setq org-habit-graph-column 60)
-
   (require 'org-tempo))
 
 
@@ -206,3 +218,7 @@
           (concat str "↯ "))
       (let ((str ""))
         (concat str "↬ ")))))
+
+(defun aporan/org-agenda-adjust-text-size ()
+  (if (= text-scale-mode-amount 0)
+      (text-scale-adjust 0.5)))

@@ -9,25 +9,30 @@
 
 (defun aporan/zk-blog ()
   (interactive)
-  (setq zk-directory "~/Github/aporan.github.io/blog"))
+  (setq zk-directory "~/Github/aporan.github.io/blog"
+        zk-file-extension "org"))
 
 (defun aporan/zk-poems ()
   (interactive)
-  (setq zk-directory "~/Github/aporan.github.io/poems"))
+  (setq zk-directory "~/Github/aporan.github.io/poems"
+        zk-file-extension "org"))
 
 (defun aporan/zk-books ()
   (interactive)
-  (setq zk-directory "~/Github/aporan.github.io/books"))
+  (setq zk-directory "~/Github/aporan.github.io/books"
+        zk-file-extension "org"))
 
 (defun aporan/zk-notes ()
   (interactive)
-  (setq zk-directory "~/Github/aporan.github.io/notes"))
+  (setq zk-directory "~/Github/aporan.github.io/notes"
+        zk-file-extension "org"))
 
 (if (eq system-type 'darwin)
     (progn
-      (defun aporan/zk-meetings ()
+      (defun aporan/zk-work ()
         (interactive)
-        (setq zk-directory "~/bdance/meetings/"))
+        (setq zk-directory "~/bdance/workjournal/"
+              zk-file-extension "md"))
       ))
 
 (use-package zk

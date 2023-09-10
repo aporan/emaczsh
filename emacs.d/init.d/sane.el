@@ -3,7 +3,7 @@
 
 (global-auto-revert-mode t)                                  ;; auto load buffer after file is changed
 (put 'narrow-to-region 'disabled nil)                        ;; allow narrow to region
-                                                             
+
 (fringe-mode 3)                                              ;; fringe border is now half-width on either side
 (menu-bar-mode -1)                                           ;; remove menu bar from display
 (tool-bar-mode -1)                                           ;; remove tool bar from display
@@ -15,7 +15,7 @@
 (set-face-attribute 'default nil                             ;; font face and style
                     :family "Ubuntu Mono"
                     :foundry "DAMA"
-                    :height 150)
+                    :height 200)
 
 
 (setq inhibit-startup-screen t                               ;; disable emacs startup splash screen
