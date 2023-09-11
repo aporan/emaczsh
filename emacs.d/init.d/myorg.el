@@ -67,28 +67,33 @@
            ((tags "daily"
                   ((org-agenda-skip-function
                     '(or (aporan/org-agenda-skip-tag "unplanned")
-                         (org-agenda-skip-entry-if 'todo '("DONE" "WAITING" "TODO"))
+                         (org-agenda-skip-entry-if 'todo '("DONE" "NEXT" "WAITING" "TODO" "CANCELLED"))
                          (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-prefix-format '((tags . "  %b ")))
-                   (org-agenda-overriding-header "Daily 🐚┐")))
+                   (org-agenda-overriding-header "Progressing ⇈")))
             (tags "unplanned"
                   ((org-agenda-skip-function
                     '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))
                          (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-prefix-format '((tags . "  %b ")))
-                   (org-agenda-overriding-header "⇈ Unplanned")))
-            (tags "daily"
-                  ((org-agenda-skip-function
-                    '(or (org-agenda-skip-entry-if 'nottodo '("WAITING"))
-                         (org-agenda-skip-if nil '(scheduled))))
-                   (org-agenda-prefix-format '((tags . "  %b ")))
-                   (org-agenda-overriding-header "⇈ Held")))
+                   (org-agenda-overriding-header "Unplanned 🦅")))
             (agenda "" ((org-agenda-span 1)
                         (org-agenda-use-time-grid nil)
                         (org-agenda-skip-function
                          '(org-agenda-skip-subtree-if 'notregexp "habit"))
                         (org-agenda-overriding-header "Repeated Tasks/Habits ...?\n")))
-
+            (tags "daily"
+                  ((org-agenda-skip-function
+                    '(or (org-agenda-skip-entry-if 'nottodo '("NEXT"))
+                         (org-agenda-skip-if nil '(scheduled))))
+                   (org-agenda-prefix-format '((tags . "  %b ")))
+                   (org-agenda-overriding-header "On-Platform 🛬")))
+            (tags "daily"
+                  ((org-agenda-skip-function
+                    '(or (org-agenda-skip-entry-if 'nottodo '("WAITING"))
+                         (org-agenda-skip-if nil '(scheduled))))
+                   (org-agenda-prefix-format '((tags . "  %b ")))
+                   (org-agenda-overriding-header "Held 🐚")))
             (agenda "" ((org-agenda-span 1)
                         (org-agenda-skip-function
                          '(org-agenda-skip-subtree-if 'regexp "habit"))
@@ -114,7 +119,7 @@
            ((tags "daily"
                   ((org-agenda-skip-function
                     '(or (aporan/org-agenda-skip-tag "unplanned")
-                         (org-agenda-skip-entry-if 'todo '("DONE" "WAITING" "TODO" "ALLOT"))
+                         (org-agenda-skip-entry-if 'todo '("DONE" "NEXT" "WAITING" "TODO" "ALLOT"))
                          (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-prefix-format '((tags . "  %b")))
                    (org-agenda-overriding-header "Daily 📜 ┐")))
@@ -129,6 +134,12 @@
                          (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-prefix-format '((tags . "  %b ")))
                    (org-agenda-overriding-header "⇈ Held")))
+            (tags "daily"
+                  ((org-agenda-skip-function
+                    '(or (org-agenda-skip-entry-if 'nottodo '("NEXT"))
+                         (org-agenda-skip-if nil '(scheduled))))
+                   (org-agenda-prefix-format '((tags . "  %b ")))
+                   (org-agenda-overriding-header "On-Platform 🛬")))
             (agenda "" ((org-agenda-span 1)
                         (org-agenda-use-time-grid nil)
                         (org-agenda-skip-function
