@@ -145,9 +145,6 @@
                         (org-agenda-skip-function
                          '(org-agenda-skip-subtree-if 'notregexp "habit"))
                         (org-agenda-overriding-header "Professional Habits\n")))
-            (agenda "" ((org-agenda-span 3)
-                        (org-agenda-skip-function
-                         '(org-agenda-skip-subtree-if 'regexp "habit"))))
             (tags "traverse"
                   ((org-agenda-skip-function
                     '(or (aporan/org-agenda-skip-tag "unplanned")
