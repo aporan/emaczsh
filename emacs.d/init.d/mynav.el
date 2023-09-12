@@ -53,10 +53,18 @@
   (setq consult-narrow-key "<"))
   
 
-(use-package marginalia
+(use-package marginalia                                        ;; side load information each functions
   :ensure t
   :config
   (marginalia-mode))
+
+
+(use-package corfu                                             ;; auto-completion matches using orderless
+  :ensure t
+  :hook ((ledger-mode . corfu-mode))
+  :config
+  (setq corfu-auto t
+        corfu-quit-no-match t))
 
 
 (use-package projectile
