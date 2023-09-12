@@ -129,7 +129,6 @@
                    (org-agenda-prefix-format '((tags . "  %b ")))
                    (org-agenda-overriding-header "⇈ Unplanned ┐")))
             (tags "daily"
-            (tags "daily"
                   ((org-agenda-skip-function
                     '(or (org-agenda-skip-entry-if 'nottodo '("WAITING" "ALLOT"))
                          (org-agenda-skip-if nil '(scheduled))))
@@ -154,7 +153,7 @@
                          (org-agenda-skip-if nil '(scheduled))
                          (org-agenda-skip-entry-if 'nottodo 'todo)))
                    (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                   (org-agenda-overriding-header "🧟‍♀ Backlog ┐"))))
+                   (org-agenda-overriding-header "🧟‍ Backlog ┐"))))
 
            ((org-agenda-files
              '("~/Gitlab/organizer/tasks/office/daily.org"))))
