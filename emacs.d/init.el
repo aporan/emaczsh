@@ -15,6 +15,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(setq package-install-upgrade-built-in t)                      ;; enable option to upgrade builtin packages 
+
 (eval-when-compile                                             ;; REQUIRES
   (require 'use-package))                                         ;; ensure-use package is available during the compilation step
                                                                   ;; as some variables are necessary; this also reduces the overall load time
