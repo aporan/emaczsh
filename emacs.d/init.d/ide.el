@@ -15,7 +15,6 @@
 
 (use-package treesit-auto
   :ensure t
-  :defer t
   :custom
   (treesit-auto-install 'prompt)
   (treesit-font-lock-level '4)
@@ -45,12 +44,5 @@
           ;; ; https://github.com/camdencheek/tree-sitter-dockerfile
           ;; docker))
   ;; https://github.com/renzmann/treesit-auto?tab=readme-ov-file#what-this-package-does
-  (treesit-auto-add-to-auto-mode-alist '(python gomod go))
+  (treesit-auto-add-to-auto-mode-alist '(python gomod go json yaml))
   (global-treesit-auto-mode))
-
-;; (use-package go-ts-mode
-;;   :ensure t
-;;   :mode "\\.go\\'"
-;;   :init
-;;   (add-to-list 'treesit-language-source-alist '(go "https://github.com/tree-sitter/tree-sitter-go"))
-;;   (add-to-list 'treesit-language-source-alist '(gomod "https://github.com/camdencheek/tree-sitter-go-mod")))
