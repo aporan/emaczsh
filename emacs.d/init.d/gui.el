@@ -1,3 +1,13 @@
+(set-face-attribute 'vertical-border nil                     ;; vertical border face is similar to background
+                    :foreground "Gray2"
+                    :background "Gray2")
+
+(set-face-attribute 'default nil                             ;; font face and style
+                    :family "Input Mono"
+                    ;; :foundry "DAMA"
+                    :weight 'thin
+                    :height 160)
+
 (use-package telephone-line
   :ensure t
   :config

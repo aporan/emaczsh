@@ -9,13 +9,6 @@
 (tool-bar-mode -1)                                           ;; remove tool bar from display
 (scroll-bar-mode -1)                                         ;; remove scroll bar from display
 (show-paren-mode t)                                          ;; highlight paranthesis pair
-(set-face-attribute 'vertical-border nil                     ;; vertical border face is similar to background
-                    :foreground "Gray2"
-                    :background "Gray2")
-(set-face-attribute 'default nil                             ;; font face and style
-                    :family "Ubuntu Mono"
-                    :foundry "DAMA"
-                    :height 200)
 
 
 (setq inhibit-startup-screen t                               ;; disable emacs startup splash screen
