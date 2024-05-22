@@ -53,7 +53,7 @@
          (org-mode . whitespace-mode))
   :init
   (setq whitespace-line-column 90
-        whitespace-style '(face indentation::tab empty)
+        whitespace-style '(face indentation::tab empty trailing)
         show-trailing-whitespace t
         whitespace-display-mappings
         '(

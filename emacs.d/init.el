@@ -27,7 +27,7 @@
   (load-theme 'cobalt t t)
   (enable-theme 'cobalt)
   (set-face-attribute 'default nil
-                      :background "#09203c"))
+                      :background "#061528"))
 
 
 (let ((directory "~/.emacs.d/init.d/"))                        ;; Load the rest of the files as specified here

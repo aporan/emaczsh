@@ -1,14 +1,19 @@
 ;; Requires the installation of a backend servers
 ;; This is nice, but it's a day job
 ;; So, some of it is probably not necessary, like configuration files
-(use-package eglot 
+(use-package eglot
   :ensure t
-  :hook (go-mode . eglot-ensure)
+  :hook ((go-mode . eglot-ensure)
         (json-ts-mode . eglot-ensure)
         (yaml-ts-mode . eglot-ensure)
         (python-mode . eglot-ensure)
         ;; https://github.com/joaotavora/eglot/issues/123#issuecomment-444104870
-        (eglot--managed-mode . (lambda () (flymake-mode -1))))
+        (eglot--managed-mode . (lambda ()
+                                 (eldoc-mode -1)
+                                 (flymake-mode -1))))
+  :config
+  (setq-default eglot-workspace-configuration
+        '(:gopls (:usePlaceholders t))))
 
 ;; https://www.reddit.com/r/emacs/comments/1crtk5g/sluggish_with_eglot/
 ;; https://github.com/jdtsmith/eglot-booster
@@ -17,6 +22,12 @@
  :config
  (eglot-booster-mode))
 
+(use-package eldoc
+  :ensure t
+  :bind ("C-h e" . eldoc-doc-buffer)
+  :config
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly))
 
 (use-package flycheck
   :ensure t
@@ -27,7 +38,7 @@
   ;; (add-to-list 'flycheck-checkers 'python-pyflakes)
   ;; (add-to-list 'flycheck-disabled-checkers 'python-flake8)
   ;; (add-to-list 'flycheck-disabled-checkers 'python-pylint)
-  
+
   ;; (use-package flycheck-pyflakes
   ;;   :after flycheck
   ;;   :ensure t
@@ -77,7 +88,7 @@
          (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
 
   (setq treesit-auto-langs
-        '(; https://github.com/tree-sitter/tree-sitter-python 
+        '(; https://github.com/tree-sitter/tree-sitter-python
           python
           ;; https://github.com/tree-sitter/tree-sitter-go
           go
