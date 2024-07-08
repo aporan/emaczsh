@@ -43,3 +43,13 @@
         zk-file-extension "org"
         zk-file-name-separator "-"
         zk-directory-recursive t))
+
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode  (("\\.md\\'" . gfm-mode))
+  :hook ((markdown-mode . auto-fill-mode)
+         (gfm-mode . auto-fill-mode))
+  :init
+  (setq markdown-command "multimarkdown"))

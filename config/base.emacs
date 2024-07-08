@@ -1,4 +1,4 @@
- (require 'package)                                                                            ;; load package file
+(require 'package)                                                                            ;; load package file
 
 (add-to-list 'package-archives                                                                ;; add melpa to package archives for more packages
              '("melpa" . "https://melpa.org/packages/"))
@@ -828,7 +828,7 @@
    '("d91ef4e714f05fff2070da7ca452980999f5361209e679ee988e3c432df24347" default))
  '(magit-todos-keywords (list "TODO" "FIXME" "BUG"))
  '(org-agenda-files
-   '("~/Gitlab/ppocket/salary.bucket.org" "/home/augusthome/Gitlab/organizer/tasks/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/career.org" "/home/augusthome/Gitlab/organizer/tasks/do.org" "/home/augusthome/Gitlab/organizer/tasks/finance.org" "/home/augusthome/Gitlab/organizer/tasks/habit.org" "/home/augusthome/Gitlab/organizer/tasks/learn.org" "/home/augusthome/Gitlab/organizer/tasks/orgnotes.org" "/home/augusthome/Gitlab/organizer/tasks/projects.org" "/home/augusthome/Gitlab/organizer/tasks/repeat.org" "/home/augusthome/Gitlab/organizer/tasks/ships.org" "/home/augusthome/Gitlab/organizer/tasks/office/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/office/daily.org" "/home/augusthome/Gitlab/organizer/tasks/office/overview.org" "/home/augusthome/Gitlab/organizer/tasks/office/unplanned.org"))
+   '("/home/augusthome/Gitlab/organizer/tasks/career.org" "/home/augusthome/Gitlab/organizer/tasks/do.org" "/home/augusthome/Gitlab/organizer/tasks/finance.org" "/home/augusthome/Gitlab/organizer/tasks/habit.org" "/home/augusthome/Gitlab/organizer/tasks/learn.org" "/home/augusthome/Gitlab/organizer/tasks/orgnotes.org" "/home/augusthome/Gitlab/organizer/tasks/projects.org" "/home/augusthome/Gitlab/organizer/tasks/repeat.org" "/home/augusthome/Gitlab/organizer/tasks/ships.org" "/home/augusthome/Gitlab/organizer/tasks/office/backlog.org" "/home/augusthome/Gitlab/organizer/tasks/office/daily.org" "/home/augusthome/Gitlab/organizer/tasks/office/overview.org" "/home/augusthome/Gitlab/organizer/tasks/office/unplanned.org"))
  '(package-selected-packages
    '(go-mode nginx-mode powershell puppet-mode org-journal-list org-journal python-mode magit-todos zetteldeft deft color-theme-modern telephone-line dimmer rainbow-delimiters which-key company-ledger company flycheck-ledger ledger-mode darkroom vue-mode dotenv-mode restclient dockerfile-mode ng2-mode ripgrep dart-mode olivetti diredfl dired-git-info dired org-sidebar flycheck-inline flycheck-color-mode-line flycheck-pyflakes flycheck python gnu-elpa-keyring-update forge counsel-projectile try calfw-org calfw magit docker-compose-mode editorconfig counsel multiple-cursors adaptive-wrap use-package))
  '(paradox-github-token t))

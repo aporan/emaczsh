@@ -6,7 +6,7 @@
                     :family "Input Mono"
                     ;; :foundry "DAMA"
                     :weight 'thin
-                    :height 160)
+                    :height 140)
 
 (use-package telephone-line
   :ensure t
@@ -63,13 +63,13 @@
           ))
   :config
   (set-face-attribute 'whitespace-line nil
-                      :foreground "SlateGray3"
-                      :background 'unspecified)
+                    :foreground "SlateGray3"
+                    :background 'unspecified)
 
   (set-face-attribute 'whitespace-empty nil
-                      :foreground nil
-                      :background "firebrick")
+                    :foreground nil
+                    :background "firebrick")
 
   (set-face-attribute 'whitespace-indentation nil
-                      :foreground nil
-                      :background "#0d2d4d"))
+                    :foreground nil
+                    :background "#0d2d4d"))

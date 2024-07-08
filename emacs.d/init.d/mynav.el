@@ -30,7 +30,7 @@
 (use-package consult                                           ;; search techniques applied to different items
   :ensure t
   :bind (
-         ;; C-x bindings 
+         ;; C-x bindings
          ("C-x b" . consult-buffer)
          ;; M-s bindings in `search-map'
          ("M-s d" . consult-find)
@@ -51,7 +51,7 @@
          ("M-s L" . consult-line-multi))
   :config
   (setq consult-narrow-key "<"))
-  
+
 
 (use-package marginalia                                        ;; side load information each functions
   :ensure t
@@ -61,10 +61,32 @@
 
 (use-package corfu                                             ;; auto-completion matches using orderless
   :ensure t
-  :hook ((ledger-mode . corfu-mode))
+  :hook ((ledger-mode . corfu-mode)
+         (go-ts-mode . corfu-mode)
+         (python-ts-mode . corfu-mode))
   :config
   (setq corfu-auto t
         corfu-quit-no-match t))
+
+(use-package cape                                              ;; extension for completion engines
+  :ensure t
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of buffer-local
+  ;; completion functions takes precedence over the global list.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-history)
+  (add-hook 'completion-at-point-functions #'cape-keyword))
+  ;;(add-hook 'completion-at-point-functions #'cape-tex)
+  ;;(add-hook 'completion-at-point-functions #'cape-sgml)
+  ;;(add-hook 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-hook 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-hook 'completion-at-point-functions #'cape-dict)
+  ;;(add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  ;;(add-hook 'completion-at-point-functions #'cape-line)
 
 
 (use-package projectile
@@ -100,3 +122,8 @@
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))

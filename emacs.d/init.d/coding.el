@@ -12,4 +12,5 @@
   :ensure t
   :config
   (setq tab-width 4
+        gofmt-args '("-s=true")
         go-ts-mode-indent-offset 4))

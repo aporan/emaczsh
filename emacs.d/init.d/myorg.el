@@ -119,7 +119,7 @@
            ((tags "daily"
                   ((org-agenda-skip-function
                     '(or (aporan/org-agenda-skip-tag "unplanned")
-                         (org-agenda-skip-entry-if 'todo '("DONE" "NEXT" "WAITING" "TODO" "ALLOT"))
+                         (org-agenda-skip-entry-if 'todo '("DONE" "NEXT" "WAITING" "TODO" "ALLOT" "CANCELLED"))
                          (org-agenda-skip-if nil '(scheduled))))
                    (org-agenda-prefix-format '((tags . "  %b")))
                    (org-agenda-overriding-header "📜 Daily ┐")))
@@ -127,7 +127,7 @@
                   ((org-agenda-skip-function
                     '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))))
                    (org-agenda-prefix-format '((tags . "  %b ")))
-                   (org-agenda-overriding-header "⇈ Unplanned ┐")))
+                   (org-agenda-overriding-header "🤦 Unplanned ┐")))
             (tags "daily"
                   ((org-agenda-skip-function
                     '(or (org-agenda-skip-entry-if 'nottodo '("WAITING" "ALLOT"))
