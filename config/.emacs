@@ -628,41 +628,41 @@
             :config
             (setq darkroom-text-scale-increase 0.7))
 
-(use-package deft
-            :ensure t
-            :commands (deft)
-            :bind ("C-c d" . deft)
-            :init
-            (setq deft-extensions '("org" "md")
-                  deft-directory "~/Github/aporan.github.io/notes"
-                  deft-ignore-file-regexp "index"
-                  deft-recursive t
-                  deft-use-filename-as-title t)
-            :config
-            (setq deft-file-naming-rules
-                  '((noslash . "_")
-                    (nospace . "-")
-                    (case-fn . downcase))))
+;; (use-package deft
+;;             :ensure t
+;;             :commands (deft)
+;;             :bind ("C-c d" . deft)
+;;             :init
+;;             (setq deft-extensions '("org" "md")
+;;                   deft-directory "~/Github/aporan.github.io/notes"
+;;                   deft-ignore-file-regexp "index"
+;;                   deft-recursive t
+;;                   deft-use-filename-as-title t)
+;;             :config
+;;             (setq deft-file-naming-rules
+;;                   '((noslash . "_")
+;;                     (nospace . "-")
+;;                     (case-fn . downcase))))
 
-(use-package zetteldeft
-            :ensure t
-            :after deft
-            :config
-            (zetteldeft-set-classic-keybindings)
+;; (use-package zetteldeft
+;;             :ensure t
+;;             :after deft
+;;             :config
+;;             (zetteldeft-set-classic-keybindings)
 
-            (defun aporan/zdeft-notes ()
-              (interactive)
-              (deft)
-              (setq deft-directory "~/Github/aporan.github.io/notes"
-                    deft-default-extension "org")
-              (deft-refresh))
+;;             (defun aporan/zdeft-notes ()
+;;               (interactive)
+;;               (deft)
+;;               (setq deft-directory "~/Github/aporan.github.io/notes"
+;;                     deft-default-extension "org")
+;;               (deft-refresh))
 
-            (defun aporan/zdeft-office ()
-              (deft)
-              (interactive)
-              (setq deft-directory "~/bytedance/notes"         ;; @ work laptop
-                    deft-default-extension "org")
-              (deft-refresh)))
+;;             (defun aporan/zdeft-office ()
+;;               (deft)
+;;               (interactive)
+;;               (setq deft-directory "~/bytedance/notes"         ;; @ work laptop
+;;                     deft-default-extension "org")
+;;               (deft-refresh)))
 
 (use-package telephone-line
              :ensure t

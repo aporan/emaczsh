@@ -73,8 +73,7 @@
                    (org-agenda-overriding-header "Progressing ⇈")))
             (tags "unplanned"
                   ((org-agenda-skip-function
-                    '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))
-                         (org-agenda-skip-if nil '(scheduled))))
+                    '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))))
                    (org-agenda-prefix-format '((tags . "  %b ")))
                    (org-agenda-overriding-header "Unplanned 🦅")))
             (agenda "" ((org-agenda-span 1)

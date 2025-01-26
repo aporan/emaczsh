@@ -43,3 +43,39 @@
         zk-file-extension "org"
         zk-file-name-separator "-"
         zk-directory-recursive t))
+
+(use-package ox-publish
+  :config
+
+  ;; publish without tracking file changes
+  (setq org-publish-use-timestamps-flag nil)
+
+  (setq org-publish-project-alist
+      `(("poems"
+         :base-directory "~/Github/aporan.github.io/poems/"
+         :base-extension "org"
+         :recursive t
+         :publishing-directory "~/Github/aporan.github.io/publish/poems/"
+         :publishing-function org-html-publish-to-html)
+
+       ("career"
+         :base-directory "~/Github/aporan.github.io/career/"
+         :base-extension "org"
+         :recursive t
+         :publishing-directory "~/Github/aporan.github.io/publish/career/"
+         :publishing-function org-html-publish-to-html)
+
+       ("notes"
+         :base-directory "~/Github/aporan.github.io/notes/"
+         :base-extension "org"
+         :publishing-directory "~/Github/aporan.github.io/publish/notes/"
+         :publishing-function org-html-publish-to-html)
+
+        ("static"
+         :base-directory "~/Github/aporan.github.io/static/"
+         :base-extension "css\\|txt\\|jpg\\|gif\\|png\\|ttf"
+         :recursive t
+         :publishing-directory "~/Github/aporan.github.io/publish/static/"
+         :publishing-function org-publish-attachment)
+
+        ("aporan.org" :components ("poems" "career" "notes" "static")))))
