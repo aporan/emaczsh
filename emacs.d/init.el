@@ -25,7 +25,9 @@
   :ensure t
   :init
   (load-theme 'cobalt t t)
-  (enable-theme 'cobalt))
+  (enable-theme 'cobalt)
+  (set-face-attribute 'default nil
+                      :background "#061528"))
 
 
 (let ((directory "~/.emacs.d/init.d/"))                        ;; Load the rest of the files as specified here

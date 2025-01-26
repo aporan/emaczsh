@@ -1,3 +1,13 @@
+(set-face-attribute 'vertical-border nil                     ;; vertical border face is similar to background
+                    :foreground "Gray2"
+                    :background "Gray2")
+
+(set-face-attribute 'default nil                             ;; font face and style
+                    :family "Input Mono"
+                    ;; :foundry "DAMA"
+                    :weight 'thin
+                    :height 140)
+
 (use-package telephone-line
   :ensure t
   :config
@@ -43,7 +53,7 @@
          (org-mode . whitespace-mode))
   :init
   (setq whitespace-line-column 90
-        whitespace-style '(face indentation::tab empty)
+        whitespace-style '(face indentation::tab empty trailing)
         show-trailing-whitespace t
         whitespace-display-mappings
         '(
@@ -53,13 +63,13 @@
           ))
   :config
   (set-face-attribute 'whitespace-line nil
-                      :foreground "SlateGray3"
-                      :background 'unspecified)
+                    :foreground "SlateGray3"
+                    :background 'unspecified)
 
   (set-face-attribute 'whitespace-empty nil
-                      :foreground nil
-                      :background "firebrick")
+                    :foreground nil
+                    :background "firebrick")
 
   (set-face-attribute 'whitespace-indentation nil
-                      :foreground nil
-                      :background "#0d2d4d"))
+                    :foreground nil
+                    :background "#0d2d4d"))

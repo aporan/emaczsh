@@ -1,17 +1,72 @@
 ;; Requires the installation of a backend servers
 ;; This is nice, but it's a day job
 ;; So, some of it is probably not necessary, like configuration files
-(use-package eglot 
+(use-package eglot
   :ensure t
-  :hook (go-mode-hook . eglot-ensure)
+  :hook ((go-mode . eglot-ensure)
         (json-ts-mode . eglot-ensure)
         (yaml-ts-mode . eglot-ensure)
-        (python-mode-hook . eglot-ensure))
+        (python-mode . eglot-ensure)
+        ;; https://github.com/joaotavora/eglot/issues/123#issuecomment-444104870
+        (eglot--managed-mode . (lambda ()
+                                 (eldoc-mode -1)
+                                 (flymake-mode -1))))
+  :config
+  (setq-default eglot-workspace-configuration
+        '(:gopls (:usePlaceholders t))))
 
 ;; https://www.reddit.com/r/emacs/comments/1crtk5g/sluggish_with_eglot/
-;; (use-package eglot-booster
-;;  :after eglot
-;;  :config (eglot-booster-mode))
+;; https://github.com/jdtsmith/eglot-booster
+(use-package eglot-booster
+ :after eglot
+ :config
+ (eglot-booster-mode))
+
+(use-package eldoc
+  :ensure t
+  :bind ("C-h e" . eldoc-doc-buffer)
+  :config
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly))
+
+(use-package flycheck
+  :ensure t
+  :hook ((python-ts-mode . flycheck-mode)
+         (go-ts-mode . flycheck-mode)
+         (ledger-mode . flycheck-mode))
+  :config
+  ;; (add-to-list 'flycheck-checkers 'python-pyflakes)
+  ;; (add-to-list 'flycheck-disabled-checkers 'python-flake8)
+  ;; (add-to-list 'flycheck-disabled-checkers 'python-pylint)
+
+  ;; (use-package flycheck-pyflakes
+  ;;   :after flycheck
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq flycheck-python-pyflakes-executable "pyflakes"))
+
+  (use-package flycheck-color-mode-line
+    :after flycheck
+    :ensure t
+    :hook (flycheck-mode . flycheck-color-mode-line-mode))
+
+  (use-package flycheck-inline
+    :after flycheck
+    :ensure t
+    :hook (flycheck-mode . flycheck-inline-mode)
+    :config
+    (set-face-attribute 'flycheck-inline-error nil
+                        :weight 'thin
+                        :foreground "firebrick1"
+                        :height 190))
+
+  (use-package flycheck-ledger
+    :after flycheck
+    :ensure t))
+
+(use-package flycheck-eglot
+  :ensure t
+  :after (flycheck eglot))
 
 (use-package treesit-auto
   :ensure t
@@ -33,7 +88,7 @@
          (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
 
   (setq treesit-auto-langs
-        '(; https://github.com/tree-sitter/tree-sitter-python 
+        '(; https://github.com/tree-sitter/tree-sitter-python
           python
           ;; https://github.com/tree-sitter/tree-sitter-go
           go
