@@ -7,6 +7,7 @@
         (json-ts-mode . eglot-ensure)
         (yaml-ts-mode . eglot-ensure)
         (python-mode . eglot-ensure)
+        (rust-mode . eglot-ensure)
         ;; https://github.com/joaotavora/eglot/issues/123#issuecomment-444104870
         (eglot--managed-mode . (lambda ()
                                  (eldoc-mode -1)
@@ -83,8 +84,9 @@
          ;; (toml "https://github.com/tree-sitter/tree-sitter-toml")
          ;; (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
          ;; (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
-         (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.19.0"))
+         (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.19.1"))
          (gomod . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
+         (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.0"))
          (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
 
   (setq treesit-auto-langs
@@ -95,9 +97,10 @@
           ;; https://github.com/camdencheek/tree-sitter-go-mod
           gomod
           yaml
+          rust
           json))
           ;; ; https://github.com/camdencheek/tree-sitter-dockerfile
           ;; docker))
   ;; https://github.com/renzmann/treesit-auto?tab=readme-ov-file#what-this-package-does
-  (treesit-auto-add-to-auto-mode-alist '(python gomod go json yaml))
+  (treesit-auto-add-to-auto-mode-alist '(python gomod go json yaml rust))
   (global-treesit-auto-mode))

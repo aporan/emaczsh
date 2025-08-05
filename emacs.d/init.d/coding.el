@@ -14,3 +14,8 @@
   (setq tab-width 4
         gofmt-args '("-s=true")
         go-ts-mode-indent-offset 4))
+
+(use-package rust-mode
+  :ensure t
+  :init
+  (setq rust-mode-treesitter-derive t))
