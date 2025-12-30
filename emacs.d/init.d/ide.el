@@ -3,24 +3,31 @@
 ;; So, some of it is probably not necessary, like configuration files
 (use-package eglot
   :ensure t
-  :hook ((go-mode . eglot-ensure)
+  :hook ((python-mode . eglot-ensure)
+        ;; (go-mode . eglot-ensure)
         (json-ts-mode . eglot-ensure)
         (yaml-ts-mode . eglot-ensure)
-        (python-mode . eglot-ensure)
-        (rust-mode . eglot-ensure)
+        ;; (rust-mode . eglot-ensure)
+        (terraform-ts-mode . eglot-ensure)
+        ;; Uncouple flymake from eglot
         ;; https://github.com/joaotavora/eglot/issues/123#issuecomment-444104870
         (eglot--managed-mode . (lambda ()
                                  (eldoc-mode -1)
                                  (flymake-mode -1))))
   :config
   (setq-default eglot-workspace-configuration
-        '(:gopls (:usePlaceholders t))))
+                '(:gopls (:usePlaceholders t)))
 
+  (add-to-list 'eglot-server-programs
+               '(terraform-ts-mode . ("terraform-ls" "serve"))))
+
+;; There are changes from emacs-30; it DOES require installing emacs-lsp-booster
 ;; https://www.reddit.com/r/emacs/comments/1crtk5g/sluggish_with_eglot/
 ;; https://github.com/jdtsmith/eglot-booster
 (use-package eglot-booster
  :after eglot
  :config
+ (setq eglot-booster-io-only t)
  (eglot-booster-mode))
 
 (use-package eldoc
@@ -32,8 +39,11 @@
 
 (use-package flycheck
   :ensure t
-  :hook ((python-ts-mode . flycheck-mode)
-         (go-ts-mode . flycheck-mode)
+  ;; Add the mode where you want to enable flycheck
+  ;; It will use the eglot backend where available
+  :hook (;;(python-ts-mode . flycheck-mode)
+         ;; (go-ts-mode . flycheck-mode)
+         (terraform-ts-mode . flycheck-mode)
          (ledger-mode . flycheck-mode))
   :config
   ;; (add-to-list 'flycheck-checkers 'python-pyflakes)
@@ -67,7 +77,10 @@
 
 (use-package flycheck-eglot
   :ensure t
-  :after (flycheck eglot))
+  :after (flycheck eglot)
+  :config
+  (global-flycheck-eglot-mode 1))
+
 
 (use-package treesit-auto
   :ensure t
@@ -84,23 +97,38 @@
          ;; (toml "https://github.com/tree-sitter/tree-sitter-toml")
          ;; (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
          ;; (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
-         (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.19.1"))
-         (gomod . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
-         (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.0"))
+         ;; (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.19.1"))
+         ;; (gomod . ("https://github.com/camdencheek/tree-sitter-go-mod" "v1.0.2"))
+         ;; (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.0"))
+         (puppet . ("https://github.com/smoeding/tree-sitter-puppet"))
+         (terraform . ("https://github.com/tree-sitter-grammars/tree-sitter-hcl" "v1.2.0" "dialects/terraform/src"))
+         (docker . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
+         (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby"))
          (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
 
   (setq treesit-auto-langs
-        '(; https://github.com/tree-sitter/tree-sitter-python
-          python
-          ;; https://github.com/tree-sitter/tree-sitter-go
-          go
-          ;; https://github.com/camdencheek/tree-sitter-go-mod
-          gomod
-          yaml
-          rust
-          json))
-          ;; ; https://github.com/camdencheek/tree-sitter-dockerfile
-          ;; docker))
+        '(python yaml json docker terraform puppet ruby))
+
   ;; https://github.com/renzmann/treesit-auto?tab=readme-ov-file#what-this-package-does
-  (treesit-auto-add-to-auto-mode-alist '(python gomod go json yaml rust))
+  (treesit-auto-add-to-auto-mode-alist '(python json yaml terraform puppet))
+
+  ;; (delete '(rust docker go) treesit-auto-langs)
   (global-treesit-auto-mode))
+
+
+(use-package outline
+  ; built-in
+  :ensure nil)
+
+(use-package bicycle
+  :ensure t
+  :after outline
+  :bind
+  ((:map outline-minor-mode-map
+         ([C-tab] . bicycle-cycle)
+         ([S-tab] . bicycle-cycle-global))))
+
+(use-package prog-mode
+  :config
+  (add-hook 'prog-mode-hook 'outline-minor-mode)
+  (add-hook 'prog-mode-hook 'hs-minor-mode))

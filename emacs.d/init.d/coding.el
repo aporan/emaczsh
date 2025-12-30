@@ -4,8 +4,13 @@
   :config
   (exec-path-from-shell-initialize))
 
+(use-package magit
+  :ensure t)
 
 (use-package python-mode
+  :ensure t)
+
+(use-package ruby-mode
   :ensure t)
 
 (use-package go-ts-mode
@@ -19,3 +24,6 @@
   :ensure t
   :init
   (setq rust-mode-treesitter-derive t))
+
+(use-package groovy-mode
+  :ensure t)

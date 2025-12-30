@@ -1,3 +1,18 @@
+(use-package terraform-mode
+  :ensure t
+  :custom (terraform-indent-level 4))
+
+(use-package terraform-ts-mode
+  ;; the ts-mode grammar association is downloaded manually
+  :load-path "~/.emacs.d/custom/terraform-ts-mode/")
+
+(use-package jenkinsfile-mode
+  :after groovy-mode
+  :ensure t)
+
+(use-package puppet-ts-mode
+  :ensure t)
+
 (use-package ledger-mode
   :ensure t
   :mode "\\.journal\\'"

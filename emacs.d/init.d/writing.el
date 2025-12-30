@@ -31,7 +31,7 @@
     (progn
       (defun aporan/zk-work ()
         (interactive)
-        (setq zk-directory "~/bdance/workjournal/"
+        (setq zk-directory "~/vizzie/doc/journal/"
               zk-file-extension "md"))
       ))
 
@@ -49,7 +49,8 @@
   :commands (markdown-mode gfm-mode)
   :mode  (("\\.md\\'" . gfm-mode))
   :hook ((markdown-mode . auto-fill-mode)
-         (gfm-mode . auto-fill-mode))
+         (gfm-mode . auto-fill-mode)
+         (gfm-mode . darkroom-tentative-mode))
   :init
   (setq markdown-command "multimarkdown"))
 
@@ -88,4 +89,3 @@
          :publishing-function org-publish-attachment)
 
         ("aporan.org" :components ("poems" "career" "notes" "static")))))
-
