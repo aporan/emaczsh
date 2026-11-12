@@ -6,7 +6,8 @@
          ("C-c i" . org-set-tags-command))                                         ;; org insert tags
   :hook ((org-mode . auto-fill-mode)
          (org-mode . darkroom-tentative-mode)
-         (org-agenda-finalize-hook . #'aporan/org-agenda-adjust-text-size))
+         ;; (org-agenda-mode . darkroom-margins))
+         (org-agenda-mode . aporan/org-agenda-adjust-text-size))
   :config
   (add-to-list 'org-structure-template-alist                                       ;; add blog easy template for .org files
                '("B" . "#+TITLE: ?\n#+PART: Nil\n#+DATE:\n#+UPDATE:\n\n"))
@@ -51,7 +52,7 @@
     (setq org-agenda-files '("~/Gitlab/organizer/tasks" "~/vizzie/doc/office")
             org-default-notes-file "~/Gitlab/organizer/tasks/orgnotes.org"
             org-agenda-breadcrumbs-separator " > "                                     ;; custom breadcrumbs separator in agenda view
-            org-agenda-block-separator 12714                                           ;; 'empty' separator between different org agenda sections
+            org-agenda-block-separator #x2500                                          ;; 'empty' separator between different org agenda sections
             org-agenda-window-setup 'only-window                                       ;; open org-agenda in a new window
             org-agenda-skip-scheduled-if-deadline-is-shown t                           ;; skip scheduled if deadline is present
             org-agenda-hide-tags-regexp "errands\\|leisure\\|unplanned\\|academia\\|cuppa\\|traverse\\|daily" ;; hide these tags in agenda view
@@ -119,13 +120,13 @@
                         '(or (aporan/org-agenda-skip-tag "unplanned")
                             (org-agenda-skip-entry-if 'todo '("DONE" "NEXT" "WAITING" "TODO" "ALLOT" "CANCELLED"))
                             (org-agenda-skip-if nil '(scheduled))))
-                    (org-agenda-prefix-format '((tags . "  %b")))
-                    (org-agenda-overriding-header "📜 Today ┐")))
+                    (org-agenda-prefix-format '((tags . "  %b ")))
+                    (org-agenda-overriding-header "Today ┐")))
                 (tags "unplanned"
                     ((org-agenda-skip-function
                         '(or (org-agenda-skip-entry-if 'done 'todo '("DONE" "CANCELLED"))))
                     (org-agenda-prefix-format '((tags . "  %b ")))
-                    (org-agenda-overriding-header "🤦 Unplanned ┐")))
+                    (org-agenda-overriding-header "Unplanned ┐")))
                 (tags "daily"
                     ((org-agenda-skip-function
                         '(or (org-agenda-skip-entry-if 'nottodo '("NEXT"))
@@ -151,7 +152,7 @@
                             (org-agenda-skip-if nil '(scheduled))
                             (org-agenda-skip-entry-if 'nottodo 'todo)))
                     (org-agenda-prefix-format '((tags . " %i %(aporan/agenda-prefix)")))
-                    (org-agenda-overriding-header "🧟‍ Backlog ┐"))))
+                    (org-agenda-overriding-header "📜‍ Backlog ┐"))))
 
             ((org-agenda-files
               '("~/vizzie/doc/tasks/"))))
@@ -226,5 +227,7 @@
             (concat str "↬ ")))))
 
     (defun aporan/org-agenda-adjust-text-size ()
-    (if (= text-scale-mode-amount 0)
-        (text-scale-adjust 0.5)))
+      (face-remap-set-base 'default :height 180))
+    ;; (defun aporan/org-agenda-adjust-text-size ()
+    ;; (if (= text-scale-mode-amount 0)
+    ;;     (text-scale-adjust 0.5)))
